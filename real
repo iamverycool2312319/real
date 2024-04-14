@@ -71,7 +71,7 @@ for _, Value in pairs(getgc()) do
 end
 
 
-task.wait("500")
+task.wait()
 
 
 print('Done! Now Loading')
