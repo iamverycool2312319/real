@@ -103,7 +103,6 @@ local Window = MakoLib:CreateWindow({
 
 local MainTab = Window:CreateTab("Main", 13594361489)
 local CharacterTab = Window:CreateTab("Player", 13585011079)
-local PhysicsTab = Window:CreateTab("Physics")
 
 --> Section Stuff
 local QBAimbot = MainTab:CreateSection("QB Aimbot", 13594361489)
@@ -326,54 +325,6 @@ PullVector:CreateSlider({
         if getgenv().Pull_Vector then
             getgenv().Football_Vector = Value
         end
-    end,
-})
-
-Movement:CreateToggle({
-    Title = "Custom WalkSpeed Enabled",
-    Binding = false,
-    CurrentValue = false,
-    Callback = function(Value)
-        getgenv().Custom_WalkSpeed = Value
-    end,
-})
-
-Movement:CreateSlider({
-    Title = "Custom WalkSpeed Amount",
-    CurrentValue = 20,
-    Range = {20, 29},
-    Callback = function(Value)
-      task.spawn(function()
-          while task.wait() do
-              if (getgenv().Custom_WalkSpeed) == true then
-                  game:GetService("Players").LocalPlayer.Character.Humanoid.WalkSpeed = Value
-                end
-            end
-        end)
-    end,
-})
-
-Movement:CreateToggle({
-    Title = "Custom JumpPower Enabled",
-    Binding = false,
-    CurrentValue = false,
-    Callback = function(Value)
-        getgenv().Custom_JumpPower = Value
-    end,
-})
-
-Movement:CreateSlider({
-    Title = "Custom JumpPower Amount",
-    CurrentValue = 50,
-    Range = {50, 80},
-    Callback = function(Value)
-      task.spawn(function()
-          while task.wait() do
-              if (getgenv().Custom_JumpPower) == true then
-                  game:GetService("Players").LocalPlayer.Character.Humanoid.JumpPower = Value
-                end
-            end
-        end)
     end,
 })
 
