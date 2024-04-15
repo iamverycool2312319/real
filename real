@@ -102,6 +102,8 @@ local Window = MakoLib:CreateWindow({
 })
 
 local MainTab = Window:CreateTab("Main", 13594361489)
+local CharacterTab = Window:CreateTab("Player", 13585011079)
+local PhysicsTab = Window:CreateTab("Physics")
 
 --> Section Stuff
 local QBAimbot = MainTab:CreateSection("QB Aimbot", 13594361489)
