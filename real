@@ -109,9 +109,7 @@ local PhysicsTab = Window:CreateTab("Physics")
 local QBAimbot = MainTab:CreateSection("QB Aimbot", 13594361489)
 local FootballMagnents = MainTab:CreateSection("Magnents", 13594361489)
 local PassingStuff = MainTab:CreateSection("Passing", 13594361489)
-local Physics = PhysicsTab:CreateSection("Dive Vector")
 local Misc = CharacterTab:CreateSection("Misc", 13585011079)
-local Movement = CharacterTab:CreateSection("Movement", 13585011079)
 
 --> Variables For Callbacks
 getgenv().qbaimbotenabled = false
@@ -124,7 +122,7 @@ getgenv().customTargetHeight = 0
 getgenv().AutoLeadDistance = false
 
 getgenv().Football_Magnents = false
-
+getgenv().Pull_Vector = false
 
 getgenv().Football_DistanceCatch = 0
 getgenv().Football_Vector = 0
