@@ -1,76 +1,96 @@
+print('Initializing AC Bypass!')
 
-print("MetaBypass")
+--// Services
+local Players = cloneref(game:GetService("Players"))
+local ReplicatedStorage = cloneref(game:GetService("ReplicatedStorage"))
+local RunService = cloneref(game:GetService("RunService"))
+local UserInputService = cloneref(game:GetService("UserInputService"))
+local Teams = cloneref(game:GetService("Teams"))
+local TweenService = cloneref(game:GetService("TweenService"))
+local Stats = cloneref(game:GetService("Stats"))
+local RunService = cloneref(game:GetService("RunService"))
 
-local OldDebug
-OldDebug = hookfunction(debug.getinfo, function(func)
-    if func == 2 then
-        return "LocalScript"
-    end
-    return OldDebug(func)  -- Fixed the recursive call to OldDebug
-end)
+if game.PlaceId ~= 8206123457 or game.PlaceId == 8204899140 then
+    --> Made by Unlimited, Modified/Updated by NG/Johan Peterson
 
-local OldBlock
-OldBlock = hookmetamethod(game, '__namecall', function(Self, ...)
-    local Method = getnamecallmethod()
-    local Arguments = {...}
+    --// Services
+    local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-    if Method == "FireServer" and Arguments[1] and Arguments[2] == "error" then
-        return
-    end
+    --// Variables
+    local Player = game:GetService("Players").LocalPlayer
+    local Character = Player.Character or Player.CharacterAdded:Wait()
+    local HRP = Character and Character.HumanoidRootPart
+    local Hooks = {}
+    local HandshakeArgs = nil
+    local Remote = ReplicatedStorage:WaitForChild("Remotes").CharacterSoundEvent
+    local ACString = nil
+    
+    --> os.clock hook
+    local RandomNumber = math.random(1e3, 1e5)
 
-    return OldBlock(Self, ...)  -- Fixed the recursive call to OldBlock
-end)
+    Hooks.Clock = hookfunction(os.date, function(...)
+        return Hooks.Clock(...) + RandomNumber
+    end)
 
-task.wait()
-
-local ShuffleFunction = nil
-
-for i, v in pairs(getgc()) do
-    if type(v) == "function" and debug.getinfo(v).source:find("PlayerModule.LocalScript") then
-        local numparams = debug.getinfo(v).params and #debug.getinfo(v).params or debug.getinfo(v).nparams
-        if numparams == 7 then  -- Changed debug.getinfo(v).numparams to correct numparams
-            ShuffleFunction = v
-            break
-        end
-    end
-end
-
-if ShuffleFunction then
-    local OldShuffle
-    OldShuffle = hookfunction(ShuffleFunction, function(...)
+    --> namecall hook
+    Hooks.Namecall = hookmetamethod(game, "__namecall", function(self, ...)
+        local Method = getnamecallmethod()
         local Args = {...}
 
-        if #Args >= 6 then
-            local AllowedSets = (Args[2] == 655 and Args[3] == 775 and Args[4] == 724 and Args[5] == 633 and Args[6] == 891) or
-                                (Args[2] == 760 and Args[3] == 760 and Args[4] == 771 and Args[5] == 665 and Args[6] == 898) or
-                                (Args[2] == 660 and Args[3] == 759 and Args[4] == 751 and Args[5] == 863 and Args[6] == 771)
-
-            if not AllowedSets then
-                warn("Warning: Argument set not allowed:", table.unpack(Args))
-                return warn("Warning: Argument set not allowed:", table.unpack(Args)) -- Changed to return the warning message
+        if not checkcaller() and self == Remote and (Method == "FireServer" or Method == "fireServer") and string.find(Args[1], "AC") then
+            if not HandshakeArgs then
+                if type(Args[2]) == "table" and #Args[2] == 19 then
+                    ACString = Args[1]
+                    HandshakeArgs = Args[2]
+                end
             else
-                return OldShuffle(...)
+                return coroutine.yield()
+            end
+        end
+
+        return Hooks.Namecall(self, ...)
+    end)
+
+    while not ACString and not HandshakeArgs do
+        task.wait()
+    end
+
+    print("Found handshake arguments.")
+
+    task.wait(3)
+
+    for i, v in pairs(getgc()) do
+        if type(v) == "function" then
+            if getinfo(v).source:find("PlayerModule.LocalScript") then
+                hookfunction(v, function() end)
+            end
+        end
+    end
+
+    print("Hooked all anticheat functions.")
+
+    local ReplicateHandshake = function()
+        return Remote:fireServer(ACString, HandshakeArgs, nil)
+    end
+
+    task.spawn(function()
+        while task.wait(0.4) do
+            local Success, Error = pcall(ReplicateHandshake)
+
+            if not Success or Error then
+                return {
+                    warn("Bypass timed out."),
+                    task.wait(20),
+                    game:GetService("Players").LocalPlayer:Kick("Bypass timed out.")
+                }
             end
         end
     end)
+
+    print("Replicated handshake.")
 end
 
-for _, Value in pairs(getgc()) do
-    if type(Value) == 'function' and debug.getinfo(Value).source:find("PlayerModule.LocalScript") then
-        local constants = debug.getconstants(Value)
-        for Index2, Value2 in pairs(constants) do
-            if Value2 == 4000001 then
-                debug.setconstant(Value, Index2, 1)
-            end
-
-            if Value2 == 20.03 or Value2 == 50.03 then
-                debug.setconstant(Value, Index2, 100)
-            end
-        end
-    end
-end
-
-
+task.wait()
 
 print('Done! Now Loading')
 
@@ -89,7 +109,6 @@ local PhysicsTab = Window:CreateTab("Physics")
 local QBAimbot = MainTab:CreateSection("QB Aimbot", 13594361489)
 local FootballMagnents = MainTab:CreateSection("Magnents", 13594361489)
 local PassingStuff = MainTab:CreateSection("Passing", 13594361489)
-local PullVector = MainTab:CreateSection("Pull Vector", 13594361489)
 local Physics = PhysicsTab:CreateSection("Dive Vector")
 local Misc = CharacterTab:CreateSection("Misc", 13585011079)
 local Movement = CharacterTab:CreateSection("Movement", 13585011079)
@@ -105,7 +124,7 @@ getgenv().customTargetHeight = 0
 getgenv().AutoLeadDistance = false
 
 getgenv().Football_Magnents = false
-getgenv().Pull_Vector = false
+
 
 getgenv().Football_DistanceCatch = 0
 getgenv().Football_Vector = 0
