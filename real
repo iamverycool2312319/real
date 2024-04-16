@@ -1651,3 +1651,5 @@ task.spawn(function()
     end
 end)
 --mag
+
+print("EcpliseHub Loaded")
