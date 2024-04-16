@@ -104,7 +104,7 @@ task.wait(1)
         Duration = 6 -- Adjust notification duration as needed
     })
 
-print('MetaBypass, Done Now Loading!')
+print('EcpliseBypass, Done Now Loading!')
 
 --> UI Initialization
 local MakoLib = loadstring(game:HttpGet("https://gist.githubusercontent.com/N2TheLegend/bc773f2cb81cff790e1929e40ce83664/raw/9746b17e8537d53cd32c45f311eb949f1b553f07/Mako.lua",true))()
