@@ -1,620 +1,699 @@
-local ShuffleFunction = nil
-
-local OldDebug
-OldDebug = hookfunction(debug.info, function(...)
-local Args = {...}
-
-if Args[1] == 2 and Args[2] == "s" then
-return "LocalScript"
-end
-
-return OldDebug(...)
-end)
-
-local OldBlock
-OldBlock = hookmetamethod(game, '__namecall', function(Self, ...)
-local Method = getnamecallmethod()
-local Arguments = {...}
-
-if Method == "fireServer" and Arguments[1] and Arguments[2] == "error" then
-return
-end
-
-return OldBlock(Self, ...)
-end)
-
-task.wait()
-
-for i, v in pairs(getgc()) do
-if type(v) == "function" and getinfo(v).source:find("PlayerModule.LocalScript") then
-if getinfo(v).numparams == 7 then
-ShuffleFunction = v
-break
-end
-end
-end
-
-if ShuffleFunction then
-local OldShuffle
-OldShuffle = hookfunction(ShuffleFunction, function(...)
-local Args = {...}
-
-local AllowedSets = (Args[2] == 655 and Args[3] == 775 and Args[4] == 724 and Args[5] == 633 and Args[6] == 891) or (Args[2] == 760 and Args[3] == 760 and Args[4] == 771 and Args[5] == 665 and Args[6] == 898) or (Args[2] == 660 and Args[3] == 759 and Args[4] == 751 and Args[5] == 863 and Args[6] == 771)
-
-if not AllowedSets then
-return warn(table.unpack(Args))
-else
-return OldShuffle(unpack(Args))
-end
-
-return OldShuffle(...)
-end)
-end
-
-for Index, Value in pairs(getgc()) do
-if type(Value) == 'function' and getinfo(Value).source:find("PlayerModule.LocalScript") then
-for Index2, Value2 in getconstants(Value) do
-if Value2 == 4000001 then
-setconstant(Value, Index2, 1)
-end
-
-if Value2 == 20.03 then
-setconstant(Value, Index2, 100)
-end
-
-if Value2 == 50.03 then
-setconstant(Value, Index2, 100)
-end
-end
-end
-end
-
-print('Made by ly_hur 2024 version')
-task.wait(1)
-print('10%')
-task.wait(1)
-print('20%')
-task.wait(1)
-print('30%')
-task.wait(1)
-print('40%')
-task.wait(1)
-print('50%')
-task.wait(1)
-print('60%')
-task.wait(1)
-print('70%')
-task.wait(1)
-print('80%')
-task.wait(1)
-print('90%')
-task.wait(1)
-print('100%')
-
-
-
-
-
-task.wait(1)
-
-  -- Send notification
-    game.StarterGui:SetCore("SendNotification", {
-        Title = "EcpliseHub Completed!",
-        Text = "Bypass made by ly_hur!",
-        Duration = 6 -- Adjust notification duration as needed
-    })
-
-print('EcpliseBypass, Done Now Loading!')
-
---> UI Initialization
-local MakoLib = loadstring(game:HttpGet("https://gist.githubusercontent.com/N2TheLegend/bc773f2cb81cff790e1929e40ce83664/raw/9746b17e8537d53cd32c45f311eb949f1b553f07/Mako.lua",true))()
-
-local Window = MakoLib:CreateWindow({
-    Title = "Meta Hub "
-})
-
-local MainTab = Window:CreateTab("Main", 13594361489)
-local CharacterTab = Window:CreateTab("Player", 13585011079)
-local PhysicsTab = Window:CreateTab("Physics")
-
---> Section Stuff
-local QBAimbot = MainTab:CreateSection("QB Aimbot", 13594361489)
-local FootballMagnents = MainTab:CreateSection("Magnents", 13594361489)
-local PassingStuff = MainTab:CreateSection("Passing", 13594361489)
-local Physics = PhysicsTab:CreateSection("Dive Vector")
-local Misc = CharacterTab:CreateSection("Misc", 13585011079)
-local Movement = CharacterTab:CreateSection("Movement", 13585011079)
-
---> Variables For Callbacks
-getgenv().qbaimbotenabled = false
-getgenv().showArcTracer = false
-getgenv().predictBallArc = false
-getgenv().autoAngle = false
-getgenv().hideDeco = false
-getgenv().customLead = 0
-getgenv().customTargetHeight = 0
-getgenv().AutoLeadDistance = false
-
-getgenv().Football_Magnents = false
-getgenv().Pull_Vector = false
-
-getgenv().Football_DistanceCatch = 0
-getgenv().Football_Vector = 0
-
-getgenv().Custom_WalkSpeed = false
-getgenv().Custom_JumpPower = false
-
-getgenv().Magnent_Mode = nil
-
---> Toggles and Sliders Setup
-QBAimbot:CreateToggle({
-  Title = "Predict Ball Arc",
-  Binding = false,
-  CurrentValue = false,
-  Callback = function(Value)
-    if (getgenv().qbaimbotenabled) then
-        getgenv().predictBallArc = Value
-    end
-  end,
-})
-
-
-QBAimbot:CreateToggle({
-  Title = "Aimbot Enabled",
-  Binding = false,
-  CurrentValue = false,
-  Callback = function(Value)
-    getgenv().qbaimbotenabled = Value
-  end,
-})
-
-QBAimbot:CreateToggle({
-  Title = "Auto Angle",
-  Binding = false,
-  CurrentValue = false,
-  Callback = function(Value)
-    if (getgenv().qbaimbotenabled) then
-      getgenv().autoAngle = Value
-    end
-  end,
-})
-
-QBAimbot:CreateToggle({
-  Title = "Show Arc Tracer",
-  Binding = false,
-  CurrentValue = false,
-  Callback = function(Value)
-    if (getgenv().qbaimbotenabled) then
-      getgenv().showArcTracer = Value
-    end
-  end,
-})
-
-QBAimbot:CreateToggle({
-    Title = "Hide ESP & Highlight",
-    Binding = false,
-    CurrentValue = false,
-    Callback = function(Value)
-        if (getgenv().qbaimbotenabled) then
-            getgenv().hideDeco = Value
+print('Initializing AC Bypass!')
+ 
+--// Services
+local Players = cloneref(game:GetService("Players"))
+local ReplicatedStorage = cloneref(game:GetService("ReplicatedStorage"))
+local RunService = cloneref(game:GetService("RunService"))
+local UserInputService = cloneref(game:GetService("UserInputService"))
+local Teams = cloneref(game:GetService("Teams"))
+local TweenService = cloneref(game:GetService("TweenService"))
+local Stats = cloneref(game:GetService("Stats"))
+local RunService = cloneref(game:GetService("RunService"))
+ 
+if game.PlaceId ~= 8206123457 or game.PlaceId == 8204899140 then
+    --> Made by Unlimited, Modified/Updated by NG/Johan Peterson
+ 
+    --// Services
+    local ReplicatedStorage = game:GetService("ReplicatedStorage")
+ 
+    --// Variables
+    local Player = game:GetService("Players").LocalPlayer
+    local Character = Player.Character or Player.CharacterAdded:Wait()
+    local HRP = Character and Character.HumanoidRootPart
+    local Hooks = {}
+    local HandshakeArgs = nil
+    local Remote = ReplicatedStorage:WaitForChild("Remotes").CharacterSoundEvent
+    local ACString = nil
+ 
+    --> os.clock hook
+    local RandomNumber = math.random(1e3, 1e5)
+ 
+    Hooks.Clock = hookfunction(os.date, function(...)
+        return Hooks.Clock(...) + RandomNumber
+    end)
+ 
+    --> namecall hook
+    Hooks.Namecall = hookmetamethod(game, "__namecall", function(self, ...)
+        local Method = getnamecallmethod()
+        local Args = {...}
+ 
+        if not checkcaller() and self == Remote and (Method == "FireServer" or Method == "fireServer") and string.find(Args[1], "AC") then
+            if not HandshakeArgs then
+                if type(Args[2]) == "table" and #Args[2] == 19 then
+                    ACString = Args[1]
+                    HandshakeArgs = Args[2]
+                end
+            else
+                return coroutine.yield()
+            end
         end
-    end,
-})
-
-
-
-
-
-FootballMagnents:CreateToggle({
-    Title = "Enabled",
-    Binding = false,
-    CurrentValue = false,
-    Callback = function(Value)
-        getgenv().Football_Magnents = Value
-    end,
-})
-
-FootballMagnents:CreateDropdown({
-    Title = "Mag Type",
-    Options = {"Regular", "Blatant", "Legit"},
-    CurrentOption = "Regular",
-    Callback = function(Value)
-        if (getgenv().Football_Magnents) then
-            
-        end
-    end,
-})
-
-local autodist = 10
-
-local function autoCatch()
-    while true do
+ 
+        return Hooks.Namecall(self, ...)
+    end)
+ 
+    while not ACString and not HandshakeArgs do
         task.wait()
-        local ball = workspace:FindFirstChild("Football")
-        if ball and ball.ClassName == "BasePart" then
-            local distance = (ball.Position - game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
-            if distance < autodist then
-                game:GetService("ReplicatedStorage").Remotes.CharacterSoundEvent:fireServer("PlayerActions", "catch")
-                task.wait(1.5)
+    end
+ 
+    print("Found handshake arguments.")
+ 
+    task.wait(3)
+ 
+    for i, v in pairs(getgc()) do
+        if type(v) == "function" then
+            if getinfo(v).source:find("PlayerModule.LocalScript") then
+                hookfunction(v, function() end)
             end
         end
     end
-end
-
-FootballMagnents:CreateToggle({
-    Title = "Auto Catch",
-    Binding = false,
-    CurrentValue = false,
-    Callback = function(value)
-        if value then
-            autoCatch()
+ 
+    print("Hooked all anticheat functions.")
+ 
+    local ReplicateHandshake = function()
+        return Remote:fireServer(ACString, HandshakeArgs, nil)
+    end
+ 
+    task.spawn(function()
+        while task.wait(0.4) do
+            local Success, Error = pcall(ReplicateHandshake)
+ 
+            if not Success or Error then
+                return {
+                    warn("Bypass timed out."),
+                    task.wait(20),
+                    game:GetService("Players").LocalPlayer:Kick("Bypass timed out.")
+                }
+            end
         end
-    end,
+    end)
+ 
+    print("Replicated handshake.")
+end
+ 
+task.wait()
+ 
+print('Done! Now Loading')
+
+
+
+local Rayfield = loadstring(game:HttpGet('https://raw.githubusercontent.com/shlexware/Rayfield/main/source'))()
+local Window = Rayfield:CreateWindow({
+	Name = "Rayfield Example Window",
+	LoadingTitle = "Rayfield Interface Suite",
+	LoadingSubtitle = "by Sirius",
+	ConfigurationSaving = {
+		Enabled = true,
+		FileName = "Big Hub"
+	},
+	KeySystem = false, -- Set this to true to use our key system
+	KeySettings = {
+		Title = "Sirius Hub",
+		Subtitle = "Key System",
+		Note = "Join the discord (discord.gg/sirius)",
+		Key = "ABCDEF"
+	}
 })
-
-FootballMagnents:CreateSlider({
-    Title = "Auto Catch Distance",
-    CurrentValue = 0,
-    Range = {0, 10},
-    Callback = function(value)
-        autodist = value
-    end,
+local Tab = Window:CreateTab("qb stuff")
+local Tab1 = Window:CreateTab("Mag stuff")
+local Tab2 = Window:CreateTab("Movement")
+local Tab3 = Window:CreateTab("Kicker aimbot")
+local Tab4 = Window:CreateTab("DE stuff")
+local Tab5 = Window:CreateTab("Offence stuff")
+local Section = Tab:CreateSection("qb")
+local Section = Tab1:CreateSection("Mag")
+local Section = Tab2:CreateSection("Movement")
+local Section = Tab3:CreateSection("Kicking")
+local Section = Tab4:CreateSection("DEFENCE")
+local Section = Tab5:CreateSection("OFFENCE")
+local Button = Tab:CreateButton({
+	Name = "do this for qb gui to go away",
+	Callback = function()
+        enabled = false
+		-- The function that takes place when the button is pressed
+	end,
 })
+--slider
+local Toggle = Tab:CreateToggle({
+	Name = "qb aimbot look at top right for the gui",
+	CurrentValue = false,
+	Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+	Callback = function(state)
+      enabled = true
+    local leadDistance = 5
+    task.spawn(function()
+        --// qb gui initalization
+        local gui; do
+    --AIMCARD
+            local AimCard = Instance.new("ScreenGui")
+            local Angle = Instance.new("Frame")
+            local AngleCorner = Instance.new("UICorner")
+            local AngleNum = Instance.new("TextLabel")
+            local NumCorn = Instance.new("UICorner")
+            local AngleLabel = Instance.new("TextLabel")
+            local LabelCorner = Instance.new("UICorner")
+            local Player = Instance.new("Frame")
+            local PlayerCorn = Instance.new("UICorner")
+            local PlayerText = Instance.new("TextLabel")
+            local NumCorn2 = Instance.new("UICorner")
+            local PlayerLabel = Instance.new("TextLabel")
+            local LabelCorner2 = Instance.new("UICorner")
+            local Mode = Instance.new("Frame")
+            local Modecorn = Instance.new("UICorner")
+            local ModeText = Instance.new("TextLabel")
+            local NumCorn3 = Instance.new("UICorner")
+            local ModeLabel = Instance.new("TextLabel")
+            local LabelCorner3 = Instance.new("UICorner")
+            
+            -- Properties
+            
+            AimCard.Parent =gethui()
+            AimCard.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+            
 
-local AS_Enabled = false
+            local elementWidth = 100 -- Assuming all elements have the same width
 
-FootballMagnents:CreateToggle({
-    Title = "Auto Swat",
-    Binding = false,
-    CurrentValue = false,
-    Callback = function(v)
-        AS_Enabled = v
-        while wait() do
-            if AS_Enabled == true then
-                local HRP = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-                for i,v in pairs(workspace:GetChildren()) do
-                    if v.Name == "Football" and v:IsA("BasePart") and ((v.Position - HRP.Position).Magnitude <= 30) == true then  
-                        keypress(0x52)
-                        keyrelease(0x52)
+
+            Angle.Name = "Angle"
+            Angle.Parent = AimCard
+            Angle.BackgroundColor3 = Color3.new(0.156863, 0.156863, 0.156863)
+            Angle.BorderColor3 = Color3.new(0, 0, 0)
+            Angle.BorderSizePixel = 0
+            Angle.Position = UDim2.new(1, -elementWidth * 3, 0, 0) -- Positioned next to Player
+            Angle.Size = UDim2.new(0, elementWidth, 0, 100)
+            Angle.ZIndex = 7
+            
+            AngleCorner.Name = "AngleCorner"
+            AngleCorner.Parent = Angle
+            
+            AngleNum.Name = "AngleNum"
+            AngleNum.Parent = Angle
+            AngleNum.BackgroundColor3 = Color3.new(1, 1, 1)
+            AngleNum.BackgroundTransparency = 1
+            AngleNum.BorderColor3 = Color3.new(0, 0, 0)
+            AngleNum.BorderSizePixel = 0
+            AngleNum.Size = UDim2.new(0, 100, 0, 72)
+            AngleNum.Font = Enum.Font.Gotham
+            AngleNum.Text = "40"
+            AngleNum.TextColor3 = Color3.new(0.8, 0.6, 1)
+            AngleNum.TextScaled = true
+            AngleNum.TextSize = 14 -- Adjust as needed
+            AngleNum.TextWrapped = true
+            
+            NumCorn.Name = "NumCorn"
+            NumCorn.Parent = AngleNum
+            
+            AngleLabel.Name = "AngleLabel"
+            AngleLabel.Parent = Angle
+            AngleLabel.BackgroundColor3 = Color3.new(1, 1, 1)
+            AngleLabel.BackgroundTransparency = 1
+            AngleLabel.BorderColor3 = Color3.new(0, 0, 0)
+            AngleLabel.BorderSizePixel = 0
+            AngleLabel.Position = UDim2.new(0.025, 0, 0.66, 0)
+            AngleLabel.Size = UDim2.new(0, 100, 0, 34)
+            AngleLabel.Font = Enum.Font.Gotham
+            AngleLabel.Text = "tap f and r "
+            AngleLabel.TextColor3 = Color3.new(0.678431, 0.847059, 0.901961)
+            AngleLabel.TextSize = 22
+            
+            LabelCorner.Name = "LabelCorner"
+            LabelCorner.Parent = AngleLabel
+            
+            Player.Name = "Player"
+            Player.Parent = AimCard
+            Player.BackgroundColor3 = Color3.new(0.156863, 0.156863, 0.156863)
+            Player.BorderColor3 = Color3.new(0, 0, 0)
+            Player.BorderSizePixel = 0
+            Player.Position = UDim2.new(1, -elementWidth, 0, 0) -- Positioned next to Mode
+            Player.Size = UDim2.new(0, elementWidth, 0, 100)
+            Player.ZIndex = 7
+            
+            PlayerCorn.Name = "PlayerCorn"
+            PlayerCorn.Parent = Player
+            
+            PlayerText.Name = "PlayerText"
+            PlayerText.Parent = Player
+            PlayerText.BackgroundColor3 = Color3.new(1, 1, 1)
+            PlayerText.BackgroundTransparency = 1
+            PlayerText.BorderColor3 = Color3.new(0, 0, 0)
+            PlayerText.BorderSizePixel = 0
+            PlayerText.Size = UDim2.new(0, 100, 0, 72)
+            PlayerText.Font = Enum.Font.Gotham
+            PlayerText.Text = "playaa"
+            PlayerText.TextColor3 = Color3.new(1, 1, 1)
+            PlayerText.TextScaled = true
+            PlayerText.TextSize = 1
+            PlayerText.TextWrapped = true
+            
+            NumCorn2.Name = "NumCorn2"
+            NumCorn2.Parent = PlayerText
+            
+            PlayerLabel.Name = "PlayerLabel"
+            PlayerLabel.Parent = Player
+            PlayerLabel.BackgroundColor3 = Color3.new(1, 1, 1)
+            PlayerLabel.BackgroundTransparency = 1
+            PlayerLabel.BorderColor3 = Color3.new(0, 0, 0)
+            PlayerLabel.BorderSizePixel = 0
+            PlayerLabel.Position = UDim2.new(0, 0, 0.660000026, 0)
+            PlayerLabel.Size = UDim2.new(0, 100, 0, 34)
+            PlayerLabel.Font = Enum.Font.Gotham
+            PlayerLabel.Text = "Player press q to lock"
+            PlayerLabel.TextColor3 = Color3.new(0.396078, 1, 0.588235)
+            PlayerLabel.TextSize = 22
+            
+            LabelCorner2.Name = "LabelCorner2"
+            LabelCorner2.Parent = PlayerLabel
+
+
+            Mode.Name = "Mode"
+            Mode.Parent = AimCard
+            Mode.BackgroundColor3 = Color3.new(0.156863, 0.156863, 0.156863)
+            Mode.BorderColor3 = Color3.new(0, 0, 0)
+            Mode.BorderSizePixel = 0
+            Mode.Position = UDim2.new(1, -elementWidth * 2, 0, 0) -- Positioned at the right edge
+            Mode.Size = UDim2.new(0, elementWidth, 0, 100)
+            Mode.ZIndex = 7
+            Modecorn.Name = "Modecorn"
+            Modecorn.Parent = Mode
+            
+            Modecorn.Name = "Modecorn"
+            Modecorn.Parent = Mode
+            
+            ModeText.Name = "ModeText"
+            ModeText.Parent = Mode
+            ModeText.BackgroundColor3 = Color3.new(1, 1, 1)
+            ModeText.BackgroundTransparency = 1
+            ModeText.BorderColor3 = Color3.new(0, 0, 0)
+            ModeText.BorderSizePixel = 0
+            ModeText.Size = UDim2.new(0, 100, 0, 72)
+            ModeText.Font = Enum.Font.Gotham
+            ModeText.Text = "mag press z to change"
+            ModeText.TextColor3 = Color3.new(0.8, 0.6, 1)
+            ModeText.TextScaled = true
+            ModeText.TextSize = 1
+            ModeText.TextWrapped = true
+            
+            NumCorn3.Name = "NumCorn3"
+            NumCorn3.Parent = ModeText
+            
+            ModeLabel.Name = "ModeLabel"
+            ModeLabel.Parent = Mode
+            ModeLabel.BackgroundColor3 = Color3.new(1, 1, 1)
+            ModeLabel.BackgroundTransparency = 1
+            ModeLabel.BorderColor3 = Color3.new(0, 0, 0)
+            ModeLabel.BorderSizePixel = 0
+            ModeLabel.Position = UDim2.new(0, 0, 0.660000026, 0)
+            ModeLabel.Size = UDim2.new(0, 100, 0, 34)
+            ModeLabel.Font = Enum.Font.Gotham
+            ModeLabel.Text = "Mode"
+            ModeLabel.TextColor3 = Color3.new(0.396078, 1, 0.588235)
+            ModeLabel.TextSize = 22
+            
+            LabelCorner3.Name = "LabelCorner3"
+            LabelCorner3.Parent = ModeLabel
+            
+            gui = AimCard
+        end
+        --// main
+        local modes = {
+            ["Perfect mag"] = "Bullet",
+            ["Bullet"] = "Perfect mag"
+        }
+        local players = game:GetService("Players")
+        local runService = game:GetService("RunService")
+        local userInputService = game:GetService("UserInputService")
+        local replicatedStorage = game:GetService("ReplicatedStorage")
+        local player = players.LocalPlayer
+        local angle = 40
+        local target = nil
+        local locked = false
+        local realpower = 0
+        local camera = workspace.CurrentCamera
+        local highlight = Instance.new("Highlight")
+        local sphere = Instance.new("Part")
+        local upower, udirection = 0, Vector3.new(0, 0, 0)
+        local mouse = loadstring(game:HttpGet("https://raw.githubusercontent.com/vFishyTurtle/UI-Libraries/main/Apple%20Library/a"))()
+        local mouseRaycastParams = RaycastParams.new()	
+        local usePart = Instance.new("Part")
+        usePart.Anchored = true
+        usePart.CanCollide = false
+        usePart.Size = Vector3.new(2048, 1, 2048)
+        usePart.Transparency = 1
+        usePart.Parent = workspace
+        usePart.Position = player.Character.HumanoidRootPart.Position - Vector3.new(0, 2, 0)
+        mouseRaycastParams.FilterType = Enum.RaycastFilterType.Include
+        mouseRaycastParams.FilterDescendantsInstances = {usePart}
+        mouse:SetRaycastParams(mouseRaycastParams)
+    --beam
+        local function getMoveDirection(target)
+            if players:GetPlayerFromCharacter(target) then
+                return target.Humanoid.MoveDirection
+            else
+                return (target.Humanoid.WalkToPoint - target.Head.Position).Unit
+            end
+        end
+    
+        local function findPower(pos)
+            local powerTable = {
+                [10] = 55,
+                [20] = 60,
+                [30] = 65,
+                [35] = 70,
+                [40] = 75,
+                [50] = 80,
+                [60] = 85,
+                [70] = 90,
+                [80] = 95,
+            }
+            local distance = (player.Character.Head.Position - pos).Magnitude
+            local lDiff = math.huge
+            local power = 0
+            local pdistance = nil
+            local reachedDis = 0
+            local nextDis = 0
+            local naturalPower = 0
+            for dis, pwr in pairs(powerTable) do
+                dis *= 3
+                if distance > dis and dis > reachedDis then
+                    power = pwr
+                    naturalPower = pwr
+                    pdistance = dis
+                    reachedDis = dis
+                    if dis == 90 then nextDis = dis + 15 else nextDis = dis + 30 end
+                end
+            end
+            local diff = math.clamp(nextDis - distance, 0, math.huge)
+            local required = (nextDis - reachedDis)
+            local nextPower = powerTable[nextDis / 3] or 75
+            local percentage = diff / required
+            --print(diff, required, nextPower, power, percentage, (nextPower - power) - ((nextPower - power) * percentage))
+            power += math.clamp((nextPower - power) - ((nextPower - power) * percentage), 0, 100)
+            if power ~= power then
+                power = 50
+            end
+            return power - 5, naturalPower - 5
+        end
+    
+        local function calculateVelocity(x0, d0, t)
+            local g = Vector3.new(0, -28, 0)
+            local v0 = (d0 - x0 - 0.5*g*t*t)/t;
+            local dir = ((x0 + v0) - x0).Unit
+            local power = v0.Y / dir.Y
+            return v0, dir, power
+        end
+--qb    
+        local function findtarget()
+            local np = nil
+            local nm = math.huge
+            local s = {workspace}
+            if workspace:FindFirstChild("npcwr") then
+                table.insert(s, workspace.npcwr.a)
+                table.insert(s, workspace.npcwr.b)
+            end
+            for i, p in pairs(s) do
+                for i, c in pairs(p:GetChildren()) do
+                    if c:FindFirstChildWhichIsA("Humanoid") and c:FindFirstChild("HumanoidRootPart") then
+                        local plr = players:GetPlayerFromCharacter(c)
+                        if plr == player then continue end
+                        if not plr and game.PlaceId ~= 8206123457 then continue end
+                        if not player.Neutral then
+                            if plr.Team ~= player.Team then
+                                continue
+                            end
+                        end
+                        local d = (c.HumanoidRootPart.Position - mouse.Hit.Position).Magnitude
+                        if d < nm then
+                            nm = d
+                            np = c
+                        end	
                     end
                 end
             end
+            return np
         end
-    end,
-})
-
-FootballMagnents:CreateSlider({
-    Title = "Mag Distance",
-    CurrentValue = 0,
-    Range = {0, 120},
-    Callback = function(Value)
-        if (getgenv().Football_Magnents) then
-            getgenv().Football_DistanceCatch = Value
+    
+        local function methodIsA(self, method)
+            return string.lower(self) == string.lower(method)
         end
-    end,
-})
-
-PassingStuff:CreateToggle({
-    Title = "Auto Lead Distance",
-    Binding = false,
-    CurrentValue = false,
-    Callback = function(Value)
-        if (getgenv().qbaimbotenabled) then
-            getgenv().AutoLeadDistance = Value
+    
+        local remotes = {Fake = {}}
+    
+        local function spoofRemote(remote, funcOnFire)
+            local fakeSelf = remote:Clone()
+            fakeSelf.Parent = remote.Parent
+            remote.Name = ""
+            remotes[remote] = funcOnFire
+            remotes.Fake[fakeSelf] = remote
         end
-    end,
-})
-
-PassingStuff:CreateSlider({
-    Title = "Custom Target Height Offset",
-    CurrentValue = 0,
-    Range = {0, 10},
-    Callback = function(Value)
-        if (getgenv().qbaimbotenabled) and (getgenv().AutoLeadDistance) then
-            getgenv().customTargetHeight = Value
-        end
-    end,
-})
-
-PassingStuff:CreateSlider({
-    Title = "Custom Lead Distance",
-    CurrentValue = 0,
-    Range = {0, 10},
-    Callback = function(Value)
-        if (getgenv().qbaimbotenabled) then
-            getgenv().customLead = Value
-        end
-    end,
-})
-
-
-
-Movement:CreateToggle({
-    Title = "Custom WalkSpeed Enabled",
-    Binding = false,
-    CurrentValue = false,
-    Callback = function(Value)
-        getgenv().Custom_WalkSpeed = Value
-    end,
-})
-
-Movement:CreateSlider({
-    Title = "Custom WalkSpeed Amount",
-    CurrentValue = 20,
-    Range = {20, 29},
-    Callback = function(Value)
-      task.spawn(function()
-          while task.wait() do
-              if (getgenv().Custom_WalkSpeed) == true then
-                  game:GetService("Players").LocalPlayer.Character.Humanoid.WalkSpeed = Value
+    
+        local __namecall; __namecall = hookmetamethod(game, "__namecall", function(self, ...)
+            local method = getnamecallmethod()
+            if methodIsA(method, "FireServer") and not checkcaller() and remotes.Fake[self]  then
+                remotes.Fake[self]:FireServer(remotes[remotes.Fake[self]](...))
+            end
+            return __namecall(self, ...)
+        end)
+    
+        local function hookFootball(fb)
+            local ls = fb.Handle:WaitForChild("LocalScript", 1)
+            if ls then
+                ls.Enabled = false
+                local remoteEvent = fb.Handle:FindFirstChild("RemoteEvent")
+                if remoteEvent then
+                    spoofRemote(remoteEvent, function(old)
+                        local args = {old}
+                        if args[1] == "Clicked" then
+                            if enabled then
+                                return unpack({"Clicked", player.Character.Head.Position, player.Character.Head.Position + (udirection * 10000), (game.PlaceId == 8206123457 and upower) or 61, (game.PlaceId ~= 8206123457 and upower) or nil})
+                            else
+                                local direction = (player:GetMouse().Hit.Position - camera.CFrame.Position).Unit
+                                return unpack({"Clicked", player.Character.Head.Position, player.Character.Head.Position + (direction * 10000), (game.PlaceId == 8206123457 and realpower) or 61, realpower})
+                            end
+                        else
+                            return old
+                        end
+                    end)
+                    fb:WaitForChild("Handle"):WaitForChild("LocalScript").Enabled = true
                 end
+                ls.Enabled = true
+            end
+        end
+    
+        player.Character.ChildAdded:Connect(function(fb)
+            if fb:IsA("Tool") then
+                fb:WaitForChild("Handle")
+                hookFootball(fb)
             end
         end)
-    end,
-})
-
-Movement:CreateToggle({
-    Title = "Custom JumpPower Enabled",
-    Binding = false,
-    CurrentValue = false,
-    Callback = function(Value)
-        getgenv().Custom_JumpPower = Value
-    end,
-})
-
-local autokick = false 
-
-task.spawn(function()
-
-getgenv().Variables = {}
-
-	Variables.Players = game:GetService("Players")
-	Variables.ReplicatedStorage = game:GetService("ReplicatedStorage")
-	Variables.UserInputService = game:GetService("UserInputService")
-	Variables.Client = Variables.Players.LocalPlayer
-	Variables.Character = Variables.Client.Character or Variables.Client.CharacterAdded:Wait()
-
-	Variables.Client.CharacterAdded:Connect(function(Character)
-		Variables.Character = Character 
-	end)
-
-	local Aimbot = {}
-
-	function Aimbot:GetAccuracyArrow(Arrows)
-		local Y = 0
-		local Arrow1 = nil
-
-		for _, Arrow in pairs(Arrows) do
-			if Arrow.Position.Y.Scale > Y then
-				Y = Arrow.Position.Y.Scale
-				Arrow1 = Arrow 
-			end
-		end
-
-		return Arrow1
-	end
-
-	Variables.Client.PlayerGui.ChildAdded:Connect(function(child)
-		if child.Name == "KickerGui" and autokick == true then
-			local KickerGui = child 
-			local Meter = KickerGui:FindFirstChild("Meter")
-			local Cursor = Meter:FindFirstChild("Cursor")
-			local Arrows = {}
-
-			for i,v in pairs(Meter:GetChildren()) do
-				if string.find(v.Name:lower(), "arrow") then
-					table.insert(Arrows, v)
-				end
-			end 
-
-			repeat task.wait() until Cursor.Position.Y.Scale < 0.02
-			mouse1click()
-			repeat task.wait() until Cursor.Position.Y.Scale >= Aimbot:GetAccuracyArrow(Arrows).Position.Y.Scale + (.03 / (100 / 100))
-			mouse1click()
-		end
-	end)
-end)
-
-Misc:CreateToggle({
-    Title = "kicker aimbot dont click", 
-    Binding = false,
-    CurrentValue = false,
-    Callback =function(v)
-	autokick = v
-end})
-
-Movement:CreateToggle({
-    Title = "finish captain race", 
-    Binding = false,
-    CurrentValue = false,
-    Callback = function()
-	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Models.LockerRoomA.FinishLine.CFrame + Vector3.new(0, 2, 0)
-end})
-
-local function beamProjectile(g, v0, x0, t1) -- easy egomoose copy!
-    -- calculate the bezier points
-    local c = 0.5*0.5*0.5;
-    local p3 = 0.5*g*t1*t1 + v0*t1 + x0;
-    local p2 = p3 - (g*t1*t1 + v0*t1)/3;
-    local p1 = (c*g*t1*t1 + 0.5*v0*t1 + x0 - c*(x0+p3))/(3*c) - p2;
-
-    -- the curve sizes
-    local curve0 = (p1 - x0).magnitude;
-    local curve1 = (p2 - p3).magnitude;
-
-    -- build the world CFrames for the attachments
-    local b = (x0 - p3).unit;
-    local r1 = (p1 - x0).unit;
-    local u1 = r1:Cross(b).unit;
-    local r2 = (p2 - p3).unit;
-    local u2 = r2:Cross(b).unit;
-    b = u1:Cross(r1).unit;
-
-    local cf1 = CFrame.new(
-        x0.x, x0.y, x0.z,
-        r1.x, u1.x, b.x,
-        r1.y, u1.y, b.y,
-        r1.z, u1.z, b.z
-    )
-
-    local cf2 = CFrame.new(
-        p3.x, p3.y, p3.z,
-        r2.x, u2.x, b.x,
-        r2.y, u2.y, b.y,
-        r2.z, u2.z, b.z
-    )
-
-    return curve0, -curve1, cf1, cf2;
-end
-
-
-
---pull
-PassingStuff:CreateToggle({
-    Title = "qb aim predictions", 
-    Binding = false,
-    CurrentValue = false,
-    Callback = function(v)
-	if v and not toggleActive then
-		toggleActive = true
-		eventConnection = workspace.ChildAdded:Connect(function(b)
-			if b.Name == "Football" and b:IsA("BasePart") then
-				task.wait()
-				local vel = b.Velocity
-				local pos = b.Position
-				local c0, c1, cf1, cf2 = beamProjectile(Vector3.new(0, -28, 0), vel, pos, 10)
-				local beam = Instance.new("Beam")
-				local a0 = Instance.new("Attachment")
-				local a1 = Instance.new("Attachment")
-				beam.Color = ColorSequence.new(predictioncolor)
-				beam.Transparency = NumberSequence.new(0, 0)
-				beam.CurveSize0 = c0
-				beam.CurveSize1 = c1
-				beam.Name = "Hitbox"
-				beam.Parent = workspace.Terrain
-				beam.Transparency = NumberSequence.new({
-					NumberSequenceKeypoint.new(0, 1),
-					NumberSequenceKeypoint.new(0.01, 0),
-					NumberSequenceKeypoint.new(1, 0),
-					NumberSequenceKeypoint.new(1, 0.01),
-				})
-				beam.Segments = 1750
-				a0.Parent = workspace.Terrain
-				a1.Parent = workspace.Terrain
-				a0.CFrame = a0.Parent.CFrame:Inverse() * cf1
-				a1.CFrame = a1.Parent.CFrame:Inverse() * cf2
-				beam.Attachment0 = a0
-				beam.Attachment1 = a1
-				beam.Width0 = 0.5
-				beam.Width1 = 0.5
-				repeat task.wait() until b.Parent ~= workspace
-				a0:Destroy()
-				a1:Destroy()
-			end
-		end)
-	elseif not Value and toggleActive then
-		toggleActive = false
-		if eventConnection then
-			eventConnection:Disconnect()
-		end
-	end
-end})
-PassingStuff:CreateDropdown({
-    Title = "Predictions Color",
-    Options = {"White", "Blue", "Red", "Pink", "Green"},
-    CurrentOption = "White",
-    Callback = function(v)
-        if v == "White" then
-            predictioncolor = Color3.fromRGB(255, 255, 255)
-        elseif v == "Blue" then
-            predictioncolor = Color3.fromRGB(0, 212, 255)
-        elseif v == "pink" then
-            predictioncolor = Color3.fromRGB(253, 137, 245)
-        elseif v == "Red" then
-            predictioncolor = Color3.fromRGB(255, 0, 0)
-        elseif v == "Green" then
-            predictioncolor = Color3.fromRGB(0, 255, 115)
+    --lock
+    userInputService.InputBegan:Connect(function(input, gp)
+        if input.KeyCode == Enum.KeyCode.X then
+            if gui.Mode.ModeText.Text == "Bullet" then
+                angle = 35
+                gui.Mode.ModeText.Text = "Dime"
+                leadDistance = 8.5
+            elseif gui.Mode.ModeText.Text == "Dime" then
+                angle = 25
+                gui.Mode.ModeText.Text = "Jump"
+                leadDistance = 10
+            elseif gui.Mode.ModeText.Text == "Jump" then
+                angle = 20
+                gui.Mode.ModeText.Text = "slant deep"
+                leadDistance = 1
+            elseif gui.Mode.ModeText.Text == "slant deep" then
+                angle = 55
+                gui.Mode.ModeText.Text = "Mag"
+                leadDistance = 7
+            else
+                angle = 15
+                gui.Mode.ModeText.Text = "Bullet"
+                leadDistance = 8
+            end
+            -- Update GUI
+            gui.Angle.AngleNum.Text = angle
+            print("Mode changed to:", gui.Mode.ModeText.Text, "Angle:", angle, "Lead Distance:", leadDistance)
+        elseif input.KeyCode == Enum.KeyCode.Q then
+            locked = not locked
+            print("Locked:", locked)
         end
-    end})
+    end)
+    
+        local function calculateLanding(power, direction)
+            local vel = power * direction
+            local origin = player.Character.Head.Position + direction * 5
+            local peakTime = vel.Y / 28
+            return origin + Vector3.new(vel.X * peakTime * 2, 0, vel.Z * peakTime * 2)	
+        end
+    
+        local line = Drawing.new("Line")
+        line.Visible = false
+        line.Color = Color3.fromRGB(255, 0, 0)
+        line.Thickness = 1
+    
+        sphere.Size = Vector3.new(2, 2, 2)
+        sphere.Material = Enum.Material.ForceField
+        sphere.Anchored = true
+        sphere.CanCollide = false
+        sphere.Color = Color3.fromRGB(255, 0, 0)
+        sphere.Parent = workspace
+        highlight.FillColor = Color3.fromRGB(255, 0, 0)
+    
+        player.PlayerGui.ChildAdded:Connect(function(child)
+            if child.Name == "BallGui" then
+                local disp = child:WaitForChild("Frame"):WaitForChild("Disp")
+                disp.Changed:Connect(function()
+                    realpower = tonumber(disp.Text)
+                end)
+            end
+        end)
+     
+        while true do
+            runService.RenderStepped:Wait()
+            pcall(function()
+                if not locked then
+                    target = findtarget()
+                end
+                gui.Enabled = player.PlayerGui:FindFirstChild("BallGui") and enabled
+                if target and enabled and player.PlayerGui:FindFirstChild("BallGui") then
+                    local position, onScreen = workspace.CurrentCamera:WorldToViewportPoint(target.HumanoidRootPart.Position)
+                    local power = findPower(target.Head.Position)
+                    local moveDirection = getMoveDirection(target)
+                    local assumedDirection = (target.Head.Position - player.Character.Head.Position).Unit
+                    local speed = (assumedDirection * power).Magnitude
+                    local t = ((target.Head.Position - player.Character.Head.Position).Magnitude / speed) * (angle / 22)
+                    local velocity, dir, pwr = calculateVelocity(player.Character.Head.Position + assumedDirection * 5, target.Head.Position + (moveDirection * 22.5 * t) + moveDirection * leadDistance, t)
+                    highlight.Parent = target
+                    upower = math.clamp(pwr, 0, 95)
+                    udirection = dir
+                    sphere.Transparency = 0
+                    gui.Player.PlayerText.Text = target.Name
+                    sphere.Position = calculateLanding(upower, udirection)
+                    if onScreen then
+                        line.Visible = false
+                        line.From = workspace.CurrentCamera:WorldToViewportPoint(player.Character.Football.Handle.Position)
+                        line.To = Vector2.new(position.X, position.Y)
+                    else
+                        line.Visible = false
+                    end
+                else
+                    line.Visible = true
+                    highlight.Parent = nil
+                    sphere.Transparency = 1
+                end
+            end)
+        end
+    end)
+    end
+    })
+ 
+    
+    
+    local Toggle = Tab:CreateToggle({
+        Name = "angle qb",
+        CurrentValue = false,
+        Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+        Callback = function(state)
+    autoAngle = v
+    end
+    })
+
+local players = game:GetService("Players")
+local userInputService = game:GetService("UserInputService")
+local replicatedStorage = game:GetService("ReplicatedStorage")
+local remotes = replicatedStorage:FindFirstChild("Remotes")
+local characterSoundEvent = remotes:FindFirstChild("CharacterSoundEvent")
+local player = players.LocalPlayer
+local runService = game:GetService("RunService")
+
+local blatant = 0
+local universal = 0
+local uniDelay = 0
 
 
+-- Functions
 
+local Players = game:GetService("Players")
+local Mouse = Players.LocalPlayer:GetMouse()
+local numTeleports = 30 -- Define the number of teleports
+local tooggleEnabled = false -- Variable to track the toggle state
 
+local function universalcatch()
+	if tooggleEnabled then
+		local catchRight = Players.LocalPlayer.Character:FindFirstChild("CatchRight")
 
+		if not catchRight then
+			return
+		end
 
+		local closestFootball = nil
+		local closestDistance = math.huge
 
-
-Movement:CreateToggle({
-    Title = "tp tackle", 
-    Binding = false,
-    CurrentValue = false,
-    Callback = function(v)
-	if v then
-		connection = game.Players.LocalPlayer:GetMouse().Button1Down:Connect(function()
-			for i, v in pairs(game.workspace:GetDescendants()) do
-				if v.Name == "Football" and v:IsA("Tool") then
-					local toolPosition = v.Parent.HumanoidRootPart.Position
-					local playerPosition = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
-					if (toolPosition - playerPosition).Magnitude <= tprange then
-						game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.Parent.HumanoidRootPart.CFrame + Vector3.new(1, 1, 1)
-					end
+		for i, v in pairs(game.Workspace:GetDescendants()) do
+			if v.Name == "Football" and v:IsA("BasePart") then
+				local distance = (v.Position - catchRight.Position).Magnitude
+				if distance < closestDistance and distance <= universal then
+					v.CanCollide = false
+					closestDistance = distance
+					closestFootball = v
 				end
 			end
-		end)
-	else
-		if connection then
-			connection:Disconnect() -- Disconnect the mouse click event only if it exists
 		end
-	end
-end})
 
-Movement:CreateSlider({
-    Title = "tp range tackle",
-    CurrentValue = 0,
-    Range = {0, 15},
-    Callback = function(v)
-	tprange = v
-end})
-
-
-local function updateCollisionState()
-	while true do
-		if isAntiJamEnabled then
-			if game.Players.LocalPlayer.Character.Head.CanCollide then
-				for _, player in ipairs(game:GetService('Players'):GetPlayers()) do
-					if player ~= game.Players.LocalPlayer then
-						pcall(function()
-							player.Character.Torso.CanCollide = false
-							player.Character.Head.CanCollide = false
-						end)
-					end
-				end
-			end
-		else
-			if not game.Players.LocalPlayer.Character.Head.CanCollide then
-				game.Players.LocalPlayer.Character.Torso.CanCollide = true
-				game.Players.LocalPlayer.Character.Head.CanCollide = true
-			end
+		if closestFootball then
+				wait(uniDelay)
+			firetouchinterest(game.Players.LocalPlayer.Character["CatchRight"], closestFootball, 0)
+			firetouchinterest(game.Players.LocalPlayer.Character["CatchRight"], closestFootball, 0)
+			firetouchinterest(game.Players.LocalPlayer.Character["CatchRight"], closestFootball, 1)
+			firetouchinterest(game.Players.LocalPlayer.Character["CatchRight"], closestFootball, 1)
+			task.wait()
 		end
-		task.wait()
 	end
 end
 
-Misc:CreateToggle({
-    Title = "antijam", 
-    Binding = false,
-    CurrentValue = false,
-    Callback = function(enabled)
-	isAntiJamEnabled = enabled
+
+local Toggle = Tab1:CreateToggle({
+	Name = "uni mags",
+	CurrentValue = false,
+	Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+	Callback = function(v)
+	tooggleEnabled = v
+	while tooggleEnabled == true do
+		task.wait()
+		universalcatch()
+	end
+end})
+
+local Slider = Tab1:CreateSlider({
+	Name = "Universal Delay",
+	Range = {0, 1},
+	Increment = 0.1,
+	Suffix = "mag delay",
+	CurrentValue = 0,
+	Flag = "Slider1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+	Callback = function(v)
+	uniDelay = v
+end})
+
+local Slider = Tab1:CreateSlider({
+	Name = "Universal Range",
+	Range = {0, 60},
+	Increment = 1,
+	Suffix = "mag range",
+	CurrentValue = 0,
+	Flag = "Slider1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+	Callback = function(v)
+	universal = v
 end})
 
 
-Movement:CreateToggle({
-    Title = "TP to Home Endzone", 
-    Binding = false,
-    CurrentValue = false,
-    Callback = function()
-	local Teleport1 = function(XP, YP, ZP)
+
+
+
+
+
+local Button = Tab2:CreateButton({
+	Name = "tp to home endzone",
+	Callback = function()
+        local Teleport1 = function(XP, YP, ZP)
 		local XTpEvery = 8
 		local YTpEvery = 1
 		local ZTpEvery = 8
@@ -707,11 +786,9 @@ Movement:CreateToggle({
 	Teleport1(2, 6, -169)
 end})
 
-Movement:CreateToggle({
-    Title = "TP to away Endzone",
-    Binding = false,
-    CurrentValue = false,
-    Callback =  function()
+local Button = Tab2:CreateButton({
+	Name = "tp to away endzone",
+	Callback = function()
 		local Teleport1 = function(XP, YP, ZP)
 			local XTpEvery = 8
 			local YTpEvery = 1
@@ -806,745 +883,349 @@ Movement:CreateToggle({
 	end})
 
 
+    local Button = Tab2:CreateButton({
+        Name = "finish cap race",
+        Callback = function()
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Models.LockerRoomA.FinishLine.CFrame + Vector3.new(0, 2, 0)
+    end})
 
 
 
-
-
-
-Movement:CreateSlider({
-    Title = "Custom JumpPower Amount",
-    CurrentValue = 50,
-    Range = {50, 80},
-    Callback = function(Value)
-      task.spawn(function()
-          while task.wait() do
-              if (getgenv().Custom_JumpPower) == true then
-                  game:GetService("Players").LocalPlayer.Character.Humanoid.JumpPower = Value
-                end
-            end
-        end)
-    end,
-})
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    local autokick = false 
 
 task.spawn(function()
-    game:GetService("RunService").Heartbeat:Connect(function()
-        for _, Value in pairs(workspace:GetChildren()) do
-            if Value.Name == "Football" and Value:IsA("BasePart") then
-                local Direction = (Value.Position - game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position).Unit
 
-                if game:GetService("Players").LocalPlayer:DistanceFromCharacter(Value.Position) <= getgenv().Football_Vector and getgenv().Pull_Vector then
-                    game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Velocity = Direction * (getgenv().Football_Vector)
-                end
-            end
-        end
-    end)
-end)
+getgenv().Variables = {}
 
-Misc:CreateToggle({
-    Title = "Anti Admin",
-    Binding = false,
-    CurrentValue = false,
-    Callback = function(v)
-        if v then
-            local moderators = {
-                "2618937233503944727",
-                "209187780079648778",
-                "265544447129812992",
-                "677964655821324329",
-                "469043698110562304",
-                "792145568586792979",
-                "490537796940070915",
-                "678699048844132362",
-                "837514415480897607",
-                "417141199564963840",
-                "580140563295109148",
-                "231225289718497281",
-                "719258236930228346",
-                "345362950380322829",
-                "513196564236468226",
-                "241945212463742986",
-                "153379470164623360",
-              }
+	Variables.Players = game:GetService("Players")
+	Variables.ReplicatedStorage = game:GetService("ReplicatedStorage")
+	Variables.UserInputService = game:GetService("UserInputService")
+	Variables.Client = Variables.Players.LocalPlayer
+	Variables.Character = Variables.Client.Character or Variables.Client.CharacterAdded:Wait()
 
-             for index, value in pairs(game:GetService("Players"):GetPlayers()) do
-                if table.find(moderators, value.UserId) then
-                    game:GetService("Players").LocalPlayer:kick("An Admin has joined! Make sure to keep this enabled for extra caution next time!")
-                end
-            end
-        end
-    end,
-})
+	Variables.Client.CharacterAdded:Connect(function(Character)
+		Variables.Character = Character 
+	end)
 
-local Tracers = {}
-local DistanceLabels = {}
-local tracerEnabled = false
+	local Aimbot = {}
 
-function AttachBall(Ball)
-    local RootPart = Players.LocalPlayer.Character and Players.LocalPlayer..Character.PrimaryPart
+	function Aimbot:GetAccuracyArrow(Arrows)
+		local Y = 0
+		local Arrow1 = nil
 
-    if RootPart and Ball then
-        local Tracer = Drawing.new("Line")
-        Tracer.Visible = false
-        Tracer.Color = Color3.fromRGB(255, 0, 0)
-        Tracer.Thickness = 1
-        Tracer.Transparency = 1
-
-        local TextLabel = Drawing.new("Text")
-        TextLabel.Text = ""
-        TextLabel.Transparency = 1
-        TextLabel.Visible = false
-        TextLabel.Color = Color3.fromRGB(255, 0, 0)
-        TextLabel.Size = 25
-
-        local con
-        con = game:GetService("RunService").RenderStepped:Connect(function()
-            if RootPart.Parent and Ball.Parent and tracerEnabled then
-                local Vector, OnScreen = game.Workspace.CurrentCamera:WorldToViewportPoint(Ball.Position)
-                local Vector2_, OnScreen2 = game.Workspace.CurrentCamera:WorldToViewportPoint(RootPart.Position)
-                local Distance = (RootPart.Position - Ball.Position).Magnitude
-
-                if OnScreen and OnScreen2 then
-                    Tracer.From = Vector2.new(Vector2_.X, Vector2_.Y)
-                    Tracer.To = Vector2.new(Vector.X, Vector.Y)
-                    Tracer.Visible = true
-                    TextLabel.Visible = true
-
-                    TextLabel.Text = tostring(math.floor(Distance)) .. " studs away"
-                    TextLabel.Position = Vector2.new(Vector.X, Vector.Y)
-
-                    if Distance <= 50 then
-                        TextLabel.Color = Color3.fromRGB(0, 255, 0)
-                        Tracer.Color = Color3.fromRGB(0, 255, 0)
-                    else
-                        TextLabel.Color = Color3.fromRGB(255, 0, 0)
-                        Tracer.Color = Color3.fromRGB(255, 0, 0)
-                    end
-                else
-                    Tracer.Visible = false
-                    TextLabel.Visible = false
-                end
-            else
-                con:Disconnect()
-                Tracer.Visible = false
-                TextLabel.Visible = false
-            end
-        end)
-        table.insert(Tracers, Tracer)
-        table.insert(DistanceLabels, TextLabel)
-    end
-end
-
-
-workspace.ChildAdded:Connect(function(child)
-    if child.Name == "Football" then
-        if tracerEnabled then
-            AttachBall(child)
-        end
-    end
-end)
-
-
-
-local Players = game:GetService("Players")
-local Mouse = Players.LocalPlayer:GetMouse()
-local numTeleports = 30 -- Define the number of teleports
-local tooggleEnabled = false -- Variable to track the toggle state
-
-
-local function universalcatch()
-	if tooggleEnabled then
-		local catchRight = Players.LocalPlayer.Character:FindFirstChild("CatchRight")
-
-		if not catchRight then
-			return
-		end
-
-		local closestFootball = nil
-		local closestDistance = math.huge
-
-		for i, v in pairs(game.Workspace:GetDescendants()) do
-			if v.Name == "Football" and v:IsA("BasePart") then
-				local distance = (v.Position - catchRight.Position).Magnitude
-				if distance < closestDistance and distance <= universal then
-					v.CanCollide = false
-					closestDistance = distance
-					closestFootball = v
-				end
+		for _, Arrow in pairs(Arrows) do
+			if Arrow.Position.Y.Scale > Y then
+				Y = Arrow.Position.Y.Scale
+				Arrow1 = Arrow 
 			end
 		end
 
-		if closestFootball then
-				wait(uniDelay)
-			firetouchinterest(game.Players.LocalPlayer.Character["CatchRight"], closestFootball, 0)
-			firetouchinterest(game.Players.LocalPlayer.Character["CatchRight"], closestFootball, 0)
-			firetouchinterest(game.Players.LocalPlayer.Character["CatchRight"], closestFootball, 1)
-			firetouchinterest(game.Players.LocalPlayer.Character["CatchRight"], closestFootball, 1)
-			task.wait()
-		end
+		return Arrow1
 	end
-end
 
-local regtog = false -- Variable to track the toggle state
+	Variables.Client.PlayerGui.ChildAdded:Connect(function(child)
+		if child.Name == "KickerGui" and autokick == true then
+			local KickerGui = child 
+			local Meter = KickerGui:FindFirstChild("Meter")
+			local Cursor = Meter:FindFirstChild("Cursor")
+			local Arrows = {}
 
-local function teleportToClosestFootball()
-	if regtog == true then
-		task.wait()
-		uis.InputBegan:Connect(function(input)
-			if input.UserInputType == Enum.UserInputType.MouseButton1 then
-				local catchRight = Players.LocalPlayer.Character:FindFirstChild("CatchRight")
-
-				if not catchRight then
-					return
+			for i,v in pairs(Meter:GetChildren()) do
+				if string.find(v.Name:lower(), "arrow") then
+					table.insert(Arrows, v)
 				end
+			end 
 
-				local closestFootball = nil
-				local closestDistance = math.huge
+			repeat task.wait() until Cursor.Position.Y.Scale < 0.02
+			mouse1click()
+			repeat task.wait() until Cursor.Position.Y.Scale >= Aimbot:GetAccuracyArrow(Arrows).Position.Y.Scale + (.03 / (100 / 100))
+			mouse1click()
+		end
+	end)
+end)
 
-				for i, v in pairs(game.Workspace:GetDescendants()) do
-					if v.Name == "Football" and v:IsA("BasePart") then
-						local distance = (v.Position - catchRight.Position).Magnitude
-						if distance < closestDistance and distance <= blatant then
-							v.CanCollide = false
-							closestDistance = distance
-							closestFootball = v
-						end
-					end
-				end
+local Toggle = Tab3:CreateToggle({
+    Name = "kicker aimbot",
+    CurrentValue = false,
+    Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+    Callback = function(v)
+	autokick = v
+end})
 
-				-- Teleport the closest football if found
-				if closestFootball then
-					for _ = 1, numTeleports do
-						if regtog == true then
-							wait(regDelay)
-							local tweenService = game:GetService("TweenService")
-							local tweenInfo = TweenInfo.new(.05, Enum.EasingStyle.Linear)
-							tweenService:Create(closestFootball, tweenInfo, {CFrame = catchRight.CFrame}):Play()
-							wait(.05)
-						end
+
+local connection
+
+local Toggle = Tab4:CreateToggle({
+    Name = "tp tackle",
+    CurrentValue = false,
+    Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+    Callback = function(v)
+	if v then
+		connection = game.Players.LocalPlayer:GetMouse().Button1Down:Connect(function()
+			for i, v in pairs(game.workspace:GetDescendants()) do
+				if v.Name == "Football" and v:IsA("Tool") then
+					local toolPosition = v.Parent.HumanoidRootPart.Position
+					local playerPosition = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
+					if (toolPosition - playerPosition).Magnitude <= tprange then
+						game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.Parent.HumanoidRootPart.CFrame + Vector3.new(1, 1, 1)
 					end
 				end
 			end
 		end)
+	else
+		if connection then
+			connection:Disconnect() -- Disconnect the mouse click event only if it exists
+		end
+	end
+end})
+
+local Slider = Tab4:CreateSlider({
+	Name = "click tackle tp range",
+	Range = {1, 15},
+	Increment = 1,
+	Suffix = "mag range",
+	CurrentValue = 0,
+	Flag = "Slider1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+	Callback = function(v)
+	tprange = v
+end})
+
+
+
+
+local swatreachmain = false
+local player = game.Players.LocalPlayer
+local swatDistance = math.huge
+local swatted = false
+local userInputService = game:GetService("UserInputService")
+
+local function isFootball(fb)
+	return fb and fb:FindFirstChildWhichIsA("RemoteEvent")
+end
+
+local function getNearestBall(checkFunc)
+	local lowestDistance = math.huge
+	local lowestFB = nil
+	for index, part in pairs(workspace:GetChildren()) do
+		if isFootball(part) and not part.Anchored then
+			if checkFunc then
+				if not checkFunc(part) then
+					continue
+				end
+			end
+			local distance = (player.Character.HumanoidRootPart.Position - part.Position).Magnitude
+			if distance < lowestDistance then
+				lowestFB = part
+				lowestDistance = distance
+			end
+		end
+	end
+	return lowestFB, lowestDistance
+end
+
+local function getNearestPartToPartFromParts(parts, part)
+	local lowestMagnitude = math.huge
+	local lowestPart = nil
+	for index, p in pairs(parts) do
+		local dis = (part.Position - p.Position).Magnitude
+		if dis < lowestMagnitude then
+			lowestMagnitude = dis
+			lowestPart = p
+		end
+	end
+	return lowestPart
+end
+
+local function initCharacter(char)
+	while swatreachmain do
+		task.wait()
+		local ball = getNearestBall()
+		if ball and swatted then
+			local distance = (player.Character.HumanoidRootPart.Position - ball.Position).Magnitude
+			if distance < swatDistance then
+				local catch = getNearestPartToPartFromParts({player.Character["CatchLeft"], player.Character["CatchRight"]}, ball)
+				firetouchinterest(ball, catch, 0)
+				firetouchinterest(ball, catch, 1)
+			end
+		end
 	end
 end
 
-Misc:CreateToggle({
-    Title = "ms by lyv1",
-    Binding = false,
-    CurrentValue = false,
-    Callback = function(v)
-	tooggleEnabled = v
-	while tooggleEnabled == true do
-		task.wait()
-		universalcatch()
+userInputService.InputBegan:Connect(function(input, gp)
+	if not gp then
+		if input.KeyCode == Enum.KeyCode.R and not swatted then
+			swatted = true
+			task.wait(1.5)
+			swatted = false
+		end
 	end
-end})
+end)
 
-Misc:CreateSlider({
-    Title = "delay",
-    CurrentValue = 0,
-    Range = {0, 15},
-    Callback = function(v)
-	uniDelay = v
-end})
-
-Misc:CreateSlider({
-    Title = "range",
-    CurrentValue = 0,
-    Range = {0, 50},
-    Callback = function(v)
-	universal = v
-end})
-
-
-
-Misc:CreateToggle({
-    Title = "ms by lyv2",
-    Binding = false,
-    CurrentValue = false,
-    Callback = function(v)
-	regtog = v
-	if regtog == true then
-		task.wait()
-		teleportToClosestFootball()
+local function updateCharacter(character)
+	if swatreachmain then
+		initCharacter(character)
 	end
-end})
+end
 
-Misc:CreateSlider({
-    Title = "delay",
-    CurrentValue = 0,
-    Range = {0, 15},
-    Callback = function(v)
-	regDelay = v
-end})
+player.CharacterAdded:Connect(updateCharacter)
 
-Misc:CreateSlider({
-    Title = "range",
-    CurrentValue = 0,
-    Range = {0, 15},
-    Callback = function(v)
-	blatant = v
-end})
-
-
-
-
-Misc:CreateToggle({
-    Title = "Ball Tracer",
-    Binding = false,
+local Toggle = Tab4:CreateToggle({
+    Name = "swat reach",
     CurrentValue = false,
-    Callback = function(enabled)
-        tracerEnabled = enabled
-
-        if not enabled then
-            for _, tracer in ipairs(Tracers) do
-                    tracer:Remove()
-                end
-
-                for _, label in ipairs(DistanceLabels) do
-                    label:Remove()
-                end
-                Tracers = {}
-                DistanceLabels = {}
-        else
-            for _, child in ipairs(workspace:GetChildren()) do
-                if child.Name == "Football" then
-                    AttachBall(child)
-                end
-            end
-        end
-    end,
-})
-
-Misc:CreateToggle({
-    Title = "Change Weather To Rain",
-    Binding = false,
-    CurrentValue = false,
+    Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
     Callback = function(value)
-        IsSnow = value 
+	swatreachmain = value
+	if value then
+		updateCharacter(player.Character) 
+	end
+end})
 
-        if IsSnow  == true then
-            for i,v in pairs(workspace.SkyWeather:GetChildren()) do
-                if v.Name == "Snow" then
-                    v.Enabled = true
-                end
-            end
-        else
-            for i,v in pairs(workspace.SkyWeather:GetChildren()) do
-                if v.Name == "Snow" then
-                    v.Enabled = false
-                end
-            end
-        end
-    end,
-})
+if swatreachmain then
+	initCharacter(player.Character)
+end
 
-Misc:CreateToggle({
-    Title = "FPS Boost",
-    Binding = false,
+-- Auto Swat
+
+local autoswatv = 0
+
+local enabledd = false
+
+local function autoswatfunction()
+	if enabledd then
+		local player = game.Players.LocalPlayer
+		local character = player.Character or player.CharacterAdded:Wait()
+		local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+		local RunService = game:GetService("RunService")
+
+		local function checkDistance(part)
+			local distance = (part.Position - humanoidRootPart.Position).Magnitude
+			if distance <= autoswatv then
+				keypress(0x52)
+				keyrelease(0x52)
+				task.wait()
+			end
+		end
+		local function updateDistances()
+			for _, v in pairs(game.Workspace:GetDescendants()) do
+				if v.Name == "Football" and v:IsA("BasePart") then
+					checkDistance(v)
+				end
+			end
+		end
+		connection = RunService.Heartbeat:Connect(updateDistances)
+	else
+		if connection then
+			connection:Disconnect()
+			connection = nil
+		end
+	end
+end
+
+local Toggle = Tab4:CreateToggle({
+    Name = "auto swat",
     CurrentValue = false,
+    Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
     Callback = function(v)
-        local decalsyeeted = v
-        local g = game
-        local w = g.Workspace
-        local l = g.Lighting
-        local t = w.Terrain
-        t.WaterWaveSize = 0
-        t.WaterWaveSpeed = 0
-        t.WaterReflectance = 0
-        t.WaterTransparency = 0
-        l.GlobalShadows = false
-        l.FogEnd = 9e9
-        l.Brightness = 0
-        settings().Rendering.QualityLevel = "Level01"
-        for i, v in pairs(g:GetDescendants()) do
-            if v:IsA("Part") or v:IsA("Union") or v:IsA("CornerWedgePart") or v:IsA("TrussPart") then
-                v.Material = "Plastic"
-                v.Reflectance = 0
-            elseif v:IsA("Decal") or v:IsA("Texture") and decalsyeeted then
-                v.Transparency = 1
-            elseif v:IsA("ParticleEmitter") or v:IsA("Trail") then
-                v.Lifetime = NumberRange.new(0)
-            elseif v:IsA("Explosion") then
-                v.BlastPressure = 1
-                v.BlastRadius = 1
-            elseif v:IsA("Fire") or v:IsA("SpotLight") or v:IsA("Smoke") then
-                v.Enabled = false
-            elseif v:IsA("MeshPart") then
-                v.Material = "Plastic"
-                v.Reflectance = 0
-                v.TextureID = 10385902758728957
-            end
-        end
-        for i, e in pairs(l:GetChildren()) do
-          if e:IsA("BlurEffect") or e:IsA("SunRaysEffect") or e:IsA("ColorCorrectionEffect") or e:IsA("BloomEffect") or e:IsA("DepthOfFieldEffect") then
-                e.Enabled = false
-            end
-        end
-    end,
-})
+	enabledd = v
+	autoswatfunction()
+end})
+
+local Slider = Tab4:CreateSlider({
+	Name = "swat reach kinda laggy",
+	Range = {1, 45},
+	Increment = 1,
+	Suffix = "mag range",
+	CurrentValue = 0,
+	Flag = "Slider1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+	Callback = function(v)
+	autoswatv = v
+end})
 
 
-Misc:CreateToggle({
-  Title = "Underground",
-    Binding = false,
+
+
+local Toggle = Tab1:CreateToggle({
+    Name = "predicted jump locations",
     CurrentValue = false,
-    Callback = function(state)
-        state = state
-        local function toggleField(state)
-            local model = game.Workspace.Models.Field.Grass
-            local transparency = state and 1 or 0
-            for _, part in pairs(model:GetDescendants()) do
-                if part:IsA("BasePart") then
-                    part.CanCollide = not state
-                    part.Transparency = transparency
-                end
-            end
-
-            if state then
-                local platform = Instance.new("Part")
-                platform.Size = Vector3.new(500, 0.001, 500)
-                platform.Position = Vector3.new(10.3562937, -2.51527438, 30.4708614)
-                platform.Anchored = true
-                platform.Parent = game.Workspace
-
-                local colors = {
-                    BrickColor.new("Light gray")
-                }
-
-                local currentIndex = 1
-
-                while state do
-                    platform.BrickColor = colors[currentIndex]
-                    currentIndex = currentIndex % #colors + 1
-
-                    wait(1)
-
-                end
-            end
-        end
-
-        toggleField(state)
-
-        local player = game.Players.LocalPlayer
-        local character = player.Character
-
-        local function setPlayerTransparency(transparency)
-            for _, part in ipairs(character:GetDescendants()) do
-                if part:IsA("BasePart") then
-                    part.Transparency = transparency
-                end
-            end
-        end
-
-        setPlayerTransparency(0.6)
-    end,
-})
-
-local LocalPlayer = game:GetService("Players").LocalPlayer
-local dv = false
-local dvdist = 15
-
-local function dv()
-    for _, Value in pairs(workspace:GetChildren()) do
-        if Value.Name == "Football" and Value:IsA("BasePart") then
-            local distance = (LocalPlayer.Character.HumanoidRootPart.Position - Value.Position).Magnitude
-
-            if distance <= dvdist then
-                local direction = (Value.Position - LocalPlayer.Character.HumanoidRootPart.Position).Unit
-                LocalPlayer.Character.HumanoidRootPart.Velocity = direction * 15
-            end
-        end
-    end
-end
-
-LocalPlayer:GetMouse().KeyDown:Connect(function(Key)
-    if Key == string.lower("e") then
-        if dv then
-            dv()
-        end
-    end
-end)
-
-
-Physics:CreateToggle({
-    Title = "Dive Vector",
-    Binding = false,
-    CurrentValue = false,
+    Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
     Callback = function(v)
-        dv = v
-    end,
-})
+	if v then
+		local player = game.Players.LocalPlayer
 
-Physics:CreateSlider({
-    Title = "Dive Vector Distance",
-    CurrentValue = 0,
-    Range = {0, 15},
-    Callback = function(v)
-        dvdist = v
-    end,
-})
+		local function handleBall(ball)
+			if ball.Name == "Football" and ball:IsA("BasePart") then
+				local v0 = ball.Velocity
+				local x0 = ball.Position
+				local dt = 1/30
+				local grav = Vector3.new(0, -28, 0)
+				local points = {
+					[1] = x0
+				}
+				local function check(p, v0)
+					local raycastParams = RaycastParams.new()
+					raycastParams.RespectCanCollide = true
+					local ray = workspace:Raycast(p, Vector3.new(0, -1000, 0), raycastParams)
+					local ray2 = workspace:Raycast(p, Vector3.new(0, -7.2 * 2, 0), raycastParams)
+					return ray and not ray2
+				end
+				while true do
+					if not check(points[#points], v0) then
+						if v0.Y < 0 then
+							break
+						end
+					end
+					local currentPoint = points[#points]
+					v0 += grav * dt
+					points[#points + 1] = currentPoint + (v0 * dt)
+				end
+				local optimal = points[#points]
+				local part = Instance.new("Part")
+				part.Anchored = true
+				part.CanCollide = false
+				part.Position = Vector3.new(optimal.X, player.Character.HumanoidRootPart.Position.Y + 1.5, optimal.Z)
+				part.Parent = workspace
+				part.Material = Enum.Material.Neon
+				part.Size = Vector3.new(1.5, 1.5, 1.5)
+				repeat task.wait() until ball.Parent ~= workspace
+				part:Destroy()
+			end
+		end
+
+		local function handleChildAdded(ball)
+			task.wait()
+			handleBall(ball)
+		end
+		eventConnection = workspace.ChildAdded:Connect(handleChildAdded)
+	else
+		if eventConnection then
+			eventConnection:Disconnect()
+			eventConnection = nil
+		end
+	end
+end})
 
 
---> QB Aimbot
 
--- Services
-local Players = game:GetService("Players")
-local UserInputService = game:GetService("UserInputService")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local RunService = game:GetService("RunService")
 
--- Variables
-local Player = Players.LocalPlayer
-local Mouse = Player:GetMouse()
-local Gui = game:GetObjects("rbxassetid://14769142268")[1]
 
-local locked = false
-local target = nil
+local function beamProjectile(g, v0, x0, t1) -- easy egomoose copy!
+    -- calculate the bezier points
+    local c = 0.5*0.5*0.5;
+    local p3 = 0.5*g*t1*t1 + v0*t1 + x0;
+    local p2 = p3 - (g*t1*t1 + v0*t1)/3;
+    local p1 = (c*g*t1*t1 + 0.5*v0*t1 + x0 - c*(x0+p3))/(3*c) - p2;
 
-local Part = Instance.new("Part")
-Part.Parent = workspace
-Part.Anchored = true
-Part.Size = Vector3.new(3, 1, 3)
-Part.CanCollide = false
+    -- the curve sizes
+    local curve0 = (p1 - x0).magnitude;
+    local curve1 = (p2 - p3).magnitude;
 
-local Beam = Instance.new("Beam")
-Beam.Parent = workspace.Terrain
-
-local Highlight = Instance.new("Highlight")
-Highlight.FillColor = Color3.fromRGB(255, 11, 202)
-Highlight.OutlineColor = Color3.fromRGB(255, 255, 255)
-
-local Attachment0, Attachment1 = Instance.new("Attachment"), Instance.new("Attachment")
-Attachment0.Parent = workspace.Terrain
-Attachment1.Parent = workspace.Terrain
-
-Beam.Width0 = 0.5
-Beam.Width1 = 0.5
-Beam.Transparency = NumberSequence.new(0)
-Beam.Color = ColorSequence.new(Color3.fromRGB(255, 11, 202))
-Beam.Attachment0 = Attachment0
-Beam.Segments = 3000
-Beam.Attachment1 = Attachment1
-
-local data = {
-    Angle = 40,
-    Power = 0,
-    Direction = Vector3.new(0, 0, 0)
-}
-
-local passTypeLeads = {
-    ["Dime"] = 2,
-    ["Jump"] = 6,
-    ["Mag"] = 12,
-}
-
-local passTypeSwitch = {
-    ["Dime"] = "Jump",
-    ["Jump"] = "Mag",
-    ["Mag"] = "Dime"
-}
-
-local passType = "Dime"
-
---[[do
-    local WhitelistedMousePart = Instance.new("Part")
-    WhitelistedMousePart.Size = Vector3.new(2048, 1, 2048)
-    WhitelistedMousePart.Anchored = true
-    WhitelistedMousePart.Transparency = 1
-    WhitelistedMousePart.Position = Player.Character.HumanoidRootPart.Position - Vector3.new(0, 4, 0)
-    WhitelistedMousePart.CanCollide = false
-    WhitelistedMousePart.Parent = workspace
-
-    local MouseRaycastParams = RaycastParams.new()
-    MouseRaycastParams.FilterType = Enum.RaycastFilterType.Include
-    MouseRaycastParams.FilterDescendantsInstances = { WhitelistedMousePart }
-    Mouse:SetRaycastParams(MouseRaycastParams)
-end--]]
-
--- Helper Functions
-
-local function InverseCosine(degrees)
-    return math.cos(math.rad(degrees))
-end
-
-local function CalculateTimeToPeak(from, to, height)
-    local g = Vector3.new(0, -28, 0)
-    local conversionFactor = 4
-    local xMeters = height * conversionFactor
-
-    local a = 0.5 * g.Y
-    local b = to.Y - from.Y
-    local c = xMeters - from.Y
-
-    local discriminant = b * b - 4 * a * c
-    if discriminant < 0 then
-        return nil
-    end
-
-    local t1 = (-b + math.sqrt(discriminant)) / (2 * a)
-    local t2 = (-b - math.sqrt(discriminant)) / (2 * a)
-
-    local t = math.max(t1, t2)
-    return t
-end
-
-local function CalculateLanding(power, direction)
-    local origin = Player.Character.Head.Position + direction * 5
-    local velocity = power * direction
-    local t = (velocity.Y / 28) * 2
-    return origin + Vector3.new(velocity.X * t, 0, velocity.Z * t), t
-end
-
-local function FindPossibleCatchers(power, direction)
-    local velocity = power * direction
-    local landing, airtime = CalculateLanding(power, direction)
-    local catchers = {}
-
-    for _, player in pairs(Players:GetPlayers()) do
-        if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-            local distance = (player.Character.HumanoidRootPart.Position - landing).Magnitude
-
-            if distance < (20 * airtime) + 10 then
-                catchers[#catchers + 1] = player
-            end
-        end
-    end
-
-    return catchers
-end
-
-local function CalculatePeakHeight(from, to, angle)
-    local unitY = 1 - InverseCosine(angle)
-    local distance = (from - to).Magnitude
-    return unitY * distance
-end
-
-local function CalculateVelocity(from, to, time)
-    local g = Vector3.new(0, -28, 0)
-    local v0 = (to - from - 0.5 * g * time * time) / time
-    local dir = ((from + v0) - from).Unit
-    local power = v0.Y / dir.Y
-    return v0, dir, math.clamp(math.round(power), 0, 95)
-end
-
-local function FindTarget()
-    local nearestPart = nil
-    local nearestDistance = math.huge
-
-    local searchParts = { workspace }
-    if workspace:FindFirstChild("npcwr") then
-        table.insert(searchParts, workspace.npcwr.a)
-        table.insert(searchParts, workspace.npcwr.b)
-    end
-
-    for _, part in pairs(searchParts) do
-        for _, child in pairs(part:GetChildren()) do
-            if child:FindFirstChildWhichIsA("Humanoid") and child:FindFirstChild("HumanoidRootPart") then
-                local player = Players:GetPlayerFromCharacter(child)
-
-                if player == Player then
-                    continue
-                end
-
-                if not player and game.PlaceId ~= 8206123457 then
-                    continue
-                end
-
-                if not Player.Neutral then
-                    if player.Team ~= Player.Team then
-                        continue
-                    end
-                end
-
-                local distance = (child.HumanoidRootPart.Position - Mouse.Hit.Position).Magnitude
-
-                if distance < nearestDistance then
-                    nearestDistance = distance
-                    nearestPart = child
-                end
-            end
-        end
-    end
-
-    return nearestPart
-end
-
-local function GetMoveDirection(target)
-    if Players:GetPlayerFromCharacter(target) then
-        return target.Humanoid.MoveDirection
-    else
-        return (target.Humanoid.WalkToPoint - target.Head.Position).Unit
-    end
-end
-
-local __namecall;
-__namecall = hookmetamethod(game, "__namecall", function(self, ...)
-    local method = getnamecallmethod()
-    local args = { ... }
-
-    if args[1] == "Clicked" and getgenv().qbaimbotenabled then
-        local newArgs = { "Clicked", Player.Character.Head.Position, Player.Character.Head.Position + data.Direction * 10000, (game.PlaceId == 8206123457 and data.Power) or 95, math.round(data.Power) }
-        return __namecall(self, unpack(newArgs))
-    end
-    return __namecall(self, ...)
-end)
-
-UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
-    if not gameProcessedEvent and Player.PlayerGui:FindFirstChild("BallGui") then
-        if input.KeyCode == Enum.KeyCode.R then
-            while UserInputService:IsKeyDown(Enum.KeyCode.R) do
-                data.Angle = data.Angle + 5
-                data.Angle = math.clamp(data.Angle, 5, 90)
-                wait(1/6)
-            end
-        elseif input.KeyCode == Enum.KeyCode.F then
-            while UserInputService:IsKeyDown(Enum.KeyCode.F) do
-                data.Angle = data.Angle - 5
-                data.Angle = math.clamp(data.Angle, 5, 90)
-                wait(1/6)
-            end
-        elseif input.KeyCode == Enum.KeyCode.Q then
-            locked = not locked
-        elseif input.KeyCode == Enum.KeyCode.Z then
-            passType = passTypeSwitch[passType]
-        end
-    end
-end)
-
-local function BeamProjectile(g, v0, x0, t1)
-    local c = 0.5 * 0.5 * 0.5
-    local p3 = 0.5 * g * t1 * t1 + v0 * t1 + x0
-    local p2 = p3 - (g * t1 * t1 + v0 * t1) / 3
-    local p1 = (c * g * t1 * t1 + 0.5 * v0 * t1 + x0 - c * (x0 + p3)) / (3 * c) - p2
-
-    local curve0 = (p1 - x0).Magnitude
-    local curve1 = (p2 - p3).Magnitude
-
-    local b = (x0 - p3).Unit
-    local r1 = (p1 - x0).Unit
-    local u1 = r1:Cross(b).Unit
-    local r2 = (p2 - p3).Unit
-    local u2 = r2:Cross(b).Unit
-    b = u1:Cross(r1).Unit
+    -- build the world CFrames for the attachments
+    local b = (x0 - p3).unit;
+    local r1 = (p1 - x0).unit;
+    local u1 = r1:Cross(b).unit;
+    local r2 = (p2 - p3).unit;
+    local u2 = r2:Cross(b).unit;
+    b = u1:Cross(r1).unit;
 
     local cf1 = CFrame.new(
         x0.x, x0.y, x0.z,
@@ -1560,96 +1241,182 @@ local function BeamProjectile(g, v0, x0, t1)
         r2.z, u2.z, b.z
     )
 
-    return curve0, -curve1, cf1, cf2
+    return curve0, -curve1, cf1, cf2;
 end
 
-Gui.Enabled = false
 
-if syn and syn.protect_gui then
-    syn.protect_gui(Gui)
+
+
+
+
+local Dropdown = Tab:CreateDropdown({
+	Name = "qb landing prediction colors",
+	Options = {"White", "Blue", "Red", "Pink", "Green"},
+	CurrentOption = "White",
+	Flag = "Dropdown1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+	Callback = function(v)
+        if v == "White" then
+            predictioncolor = Color3.fromRGB(255, 255, 255)
+        elseif v == "Blue" then
+            predictioncolor = Color3.fromRGB(0, 212, 255)
+        elseif v == "Pink" then
+            predictioncolor = Color3.fromRGB(253, 137, 245)
+        elseif v == "Red" then
+            predictioncolor = Color3.fromRGB(255, 0, 0)
+        elseif v == "Green" then
+            predictioncolor = Color3.fromRGB(0, 255, 115)
+        end
+    end,
+})
+
+--qb
+local predictioncolor = Color3.fromRGB(255, 255, 255)
+
+--FindTarget
+local Toggle = Tab:CreateToggle({
+    Name = "football landing predictions",
+    CurrentValue = false,
+    Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+    Callback = function(v)
+	if v and not toggleActive then
+		toggleActive = true
+		eventConnection = workspace.ChildAdded:Connect(function(b)
+			if b.Name == "Football" and b:IsA("BasePart") then
+				task.wait()
+				local vel = b.Velocity
+				local pos = b.Position
+				local c0, c1, cf1, cf2 = beamProjectile(Vector3.new(0, -28, 0), vel, pos, 10)
+				local beam = Instance.new("Beam")
+				local a0 = Instance.new("Attachment")
+				local a1 = Instance.new("Attachment")
+				beam.Color = ColorSequence.new(predictioncolor)
+				beam.Transparency = NumberSequence.new(0, 0)
+				beam.CurveSize0 = c0
+				beam.CurveSize1 = c1
+				beam.Name = "Hitbox"
+				beam.Parent = workspace.Terrain
+				beam.Transparency = NumberSequence.new({
+					NumberSequenceKeypoint.new(0, 1),
+					NumberSequenceKeypoint.new(0.01, 0),
+					NumberSequenceKeypoint.new(1, 0),
+					NumberSequenceKeypoint.new(1, 0.01),
+				})
+				beam.Segments = 1750
+				a0.Parent = workspace.Terrain
+				a1.Parent = workspace.Terrain
+				a0.CFrame = a0.Parent.CFrame:Inverse() * cf1
+				a1.CFrame = a1.Parent.CFrame:Inverse() * cf2
+				beam.Attachment0 = a0
+				beam.Attachment1 = a1
+				beam.Width0 = 0.5
+				beam.Width1 = 0.5
+				repeat task.wait() until b.Parent ~= workspace
+				a0:Destroy()
+				a1:Destroy()
+			end
+		end)
+	elseif not Value and toggleActive then
+		toggleActive = false
+		if eventConnection then
+			eventConnection:Disconnect()
+		end
+	end
+end})
+
+
+
+
+
+
+
+
+
+
+
+local qbaimpred = false
+local Toggle = Tab:CreateToggle({
+    Name = "qb aim pred THIS WAS HARD ASF",
+    CurrentValue = false,
+    Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+    Callback = function(v)
+	qbaimpred = v -- Update the toggle state
+
+	if qbaimpred then
+		local beam = Instance.new("Beam")
+		local a0 = Instance.new("Attachment")
+		local a1 = Instance.new("Attachment")   
+		local mouse = game.Players.LocalPlayer:GetMouse()
+		beam.Color = ColorSequence.new(Color3.fromRGB(255, 255, 255))
+		beam.Transparency = NumberSequence.new(0, 0)
+		beam.Segments = 10 * 300
+		beam.Name = "Hitbox"
+		beam.Parent = workspace.Terrain
+		a0.Parent = workspace.Terrain
+		a1.Parent = workspace.Terrain
+		beam.Attachment0 = a0
+		beam.Attachment1 = a1
+		beam.Width0 = 0.5
+		beam.Width1 = 0.5
+		while qbaimpred do
+			task.wait()
+			if game.Players.LocalPlayer.Character:FindFirstChild("Football") and game.Players.LocalPlayer.PlayerGui:FindFirstChild("BallGui") and game.Players.LocalPlayer.Character:FindFirstChild("Head") then
+				local power = tonumber(game.Players.LocalPlayer.PlayerGui.BallGui.Frame.Disp.Text)
+				local direction = (mouse.Hit.Position - workspace.CurrentCamera.CFrame.Position).Unit
+				local vel = power * direction
+				local origin = game.Players.LocalPlayer.Character.Head.Position + direction * 5
+				local c0, c1, cf1, cf2 = beamProjectile(Vector3.new(0, -28, 0), vel, origin, 15)
+				a0.CFrame = a0.Parent.CFrame:Inverse() * cf1
+				a1.CFrame = a1.Parent.CFrame:Inverse() * cf2
+				beam.CurveSize0 = c0
+				beam.CurveSize1 = c1
+			end
+		end
+		beam:Destroy() -- Clean up the beam when toggled off
+	else
+		-- Toggle turned off
+		-- Add any additional code here to handle the toggle turning off
+	end
+end})
+
+
+
+
+
+
+
+local isAntiJamEnabled = false
+
+local function updateCollisionState()
+	while true do
+		if isAntiJamEnabled then
+			if game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("Head") and game.Players.LocalPlayer.Character.Head.CanCollide then
+				for _, player in ipairs(game.Players:GetPlayers()) do
+					if player ~= game.Players.LocalPlayer and player.Character and player.Character:FindFirstChild("Head") then
+						pcall(function()
+							player.Character.Torso.CanCollide = false
+							player.Character.Head.CanCollide = false
+						end)
+					end
+				end
+			end
+		else
+			if game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("Head") and not game.Players.LocalPlayer.Character.Head.CanCollide then
+				game.Players.LocalPlayer.Character.Torso.CanCollide = true
+				game.Players.LocalPlayer.Character.Head.CanCollide = true
+			end
+		end
+		task.wait()
+	end
 end
 
-Gui.Parent = (gethui and gethui()) or game:GetService("CoreGui"):FindFirstChild("RobloxGui")
-
-task.spawn(function()
-    while task.wait() do
-        if not locked then
-            target = FindTarget()
-        end
-
-        if target and getgenv().qbaimbotenabled and Player.PlayerGui:FindFirstChild("BallGui") and Player.Character:FindFirstChild("Head") and target:FindFirstChild("HumanoidRootPart") then
-            Gui.Enabled = not getgenv().hideDeco
-            Beam.Enabled = getgenv().showArcTracer
-
-            local moveDirection = GetMoveDirection(target)
-            local angleAddition = (moveDirection.Magnitude > 0 and 5) or 0
-            local leadDistance = passTypeLeads[passType] + (5)
-            local estimatedPosition = target.Head.Position + (moveDirection * leadDistance) + Vector3.new(0, getgenv().customTargetHeight or 0, 0)
-
-            local forwardOffset = Vector3.new(0, 0, 10)
-            estimatedPosition = estimatedPosition + (moveDirection * forwardOffset)
-
-            local t = CalculateTimeToPeak(Player.Character.Head.Position, estimatedPosition, CalculatePeakHeight(Player.Character.Head.Position, estimatedPosition, data.Angle + angleAddition)) or 0.5
-
-            local vel, direction, power = CalculateVelocity(Player.Character.Head.Position, estimatedPosition, t, moveDirection)
-
-            local degrees = nil
-
-            if getgenv().autoAngle then
-                local g = workspace.Gravity
-                local R = estimatedPosition.Magnitude
-                local V = math.round(power)
-                local a0 = 0.5 * math.atan(g * R / (V^2)) 
-                degrees = math.floor(math.deg(a0))
-            end
-
-            local catchers = FindPossibleCatchers(power, direction)
-            local landing, airtime = CalculateLanding(power, direction)
-            local c0, c1, cf1, cf2 = BeamProjectile(Vector3.new(0, -28, 0), power * direction, Player.Character.Head.Position + (direction * 5), 7)
-            local isInterceptable = false
-
-            for _, catcher in pairs(catchers) do
-                local team = catcher.Team
-
-                if team ~= Player.Team then
-                    isInterceptable = true
-                    break
-                end
-            end
-
-            Part.Position = landing
-            Part.Transparency = (getgenv().predictBallArc and 0) or 1
-            Part.Color = Color3.fromRGB(255, 11, 202)
-
-            Beam.CurveSize0 = c0
-            Beam.CurveSize1 = c1
-
-            Attachment0.CFrame = Attachment0.Parent.CFrame:Inverse() * cf1
-            Attachment1.CFrame = Attachment1.Parent.CFrame:Inverse() * cf2
-
-            data.Direction = direction
-            data.Power = power
-
-            Highlight.Parent = target
-            Highlight.Enabled = not getgenv().hideDeco
-
-            if not getgenv().autoAngle then
-                Gui.Frame.pwr.value.Text = power
-                Gui.Frame.player.value.Text = target.Name
-                Gui.Frame.angle.value.Text = data.Angle
-                Gui.Frame.mode.value.Text = passType
-            else
-                Gui.Frame.pwr.value.Text = power
-                Gui.Frame.player.value.Text = target.Name
-                Gui.Frame.angle.value.Text = degrees
-                Gui.Frame.mode.value.Text = passType
-            end
-        else
-            Gui.Enabled = false
-            Highlight.Parent = nil
-        end
+local Toggle = Tab1:CreateToggle({
+    Name = "anti jam",
+    CurrentValue = false,
+    Flag = "Toggle1", 
+    Callback = function(enabled)
+        isAntiJamEnabled = enabled
     end
-end)
---mag
+})
 
-print("EcpliseHub Loaded")
+updateCollisionState() -- Start the function running
+
