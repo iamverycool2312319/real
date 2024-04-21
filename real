@@ -236,3 +236,7 @@ local Slider = Tab:CreateSlider({
 end})
 
 print("sigma")
+print("sigma")
+print("sigma")
+print("sigma")
+print("sigma")
