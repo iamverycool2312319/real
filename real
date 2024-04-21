@@ -125,6 +125,7 @@ local Section = Tab2:CreateSection("Movement")
 local Section = Tab3:CreateSection("Kicking")
 local Section = Tab4:CreateSection("DEFENCE")
 local Section = Tab5:CreateSection("OFFENCE")
+local Label = Tab:CreateLabel("ALL OF QB STUFF IS IN BETA I WOULDNT USE FOR RN")
 local Button = Tab:CreateButton({
 	Name = "do this for qb gui to go away",
 	Callback = function()
@@ -132,6 +133,8 @@ local Button = Tab:CreateButton({
 		-- The function that takes place when the button is pressed
 	end,
 })
+
+
 --slider
 local Toggle = Tab:CreateToggle({
 	Name = "qb aimbot look at top right for the gui",
@@ -744,7 +747,6 @@ end})
 local Toggle = Tab1:CreateToggle({
     Name = "emulator mags",
     CurrentValue = false,
-    Flag = "Toggle1",
     Callback = function(v)
         regtog = v
         if regtog then
@@ -1163,7 +1165,7 @@ local function updateCharacter(character)
 end
 
 player.CharacterAdded:Connect(updateCharacter)
-
+--slider
 local Toggle = Tab4:CreateToggle({
     Name = "swat reach",
     CurrentValue = false,
@@ -1229,7 +1231,7 @@ local Slider = Tab4:CreateSlider({
 	Name = "swat reach kinda laggy",
 	Range = {1, 45},
 	Increment = 1,
-	Suffix = "mag range",
+	Suffix = "swat reach",
 	CurrentValue = 0,
 	Flag = "Slider1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
 	Callback = function(v)
@@ -1344,28 +1346,8 @@ end
 
 
 
-local Dropdown = Tab:CreateDropdown({
-	Name = "qb landing prediction colors",
-	Options = {"White", "Blue", "Red", "Pink", "Green"},
-	CurrentOption = "White",
-	Flag = "Dropdown1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
-	Callback = function(v)
-        if v == "White" then
-            predictioncolor = Color3.fromRGB(255, 255, 255)
-        elseif v == "Blue" then
-            predictioncolor = Color3.fromRGB(0, 212, 255)
-        elseif v == "Pink" then
-            predictioncolor = Color3.fromRGB(253, 137, 245)
-        elseif v == "Red" then
-            predictioncolor = Color3.fromRGB(255, 0, 0)
-        elseif v == "Green" then
-            predictioncolor = Color3.fromRGB(0, 255, 115)
-        end
-    end,
-})
 
 --qb
-local predictioncolor = Color3.fromRGB(255, 255, 255)
 
 --FindTarget
 local Toggle = Tab:CreateToggle({
@@ -1773,5 +1755,236 @@ local Slider = Tab2:CreateSlider({
         _G.Jump = value
     end,
 })
+
+
+local Toggle = Tab:CreateToggle({
+    Name = "auto qb",
+    CurrentValue = false,
+    Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+    Callback = function(data)
+        local blacklisted = {"KICKOFF", "PUNT", "PAT"}
+        while true do
+            task.wait(1/30)
+            if player.Character and player.Character:FindFirstChild("HumanoidRootPart") and replicatedStorage.Values:FindFirstChild("Status") and replicatedStorage.Values.Status.Value == "PrePlay" and workspace:FindFirstChild("Football") and data.Enabled and not table.find(blacklisted, replicatedStorage.Values.StatusTag.Value) and replicatedStorage.Values.PossessionTag.Value == player.Team.Name then
+                player.Character.HumanoidRootPart.CFrame = workspace:FindFirstChild("Football").CFrame
+                repeat task.wait() until not workspace:FindFirstChild("Football")
+            end
+        end
+    end
+})
+
+
+
+
+
+--button
+
+local Button = Tab5:CreateButton({
+	Name = "fps boost",
+	Callback = function(state)
+        
+local decalsyeeted = true -- Leaving this on makes games look shitty but the fps goes up by at least 20.
+local g = game
+local w = g.Workspace
+local l = g.Lighting
+local t = w.Terrain
+t.WaterWaveSize = 0
+t.WaterWaveSpeed = 0
+t.WaterReflectance = 0
+t.WaterTransparency = 0
+l.GlobalShadows = false
+l.FogEnd = 9e9
+l.Brightness = 0
+settings().Rendering.QualityLevel = "Level01"
+for i, v in pairs(g:GetDescendants()) do
+    if v:IsA("Part") or v:IsA("Union") or v:IsA("CornerWedgePart") or v:IsA("TrussPart") then
+        v.Material = "Plastic"
+        v.Reflectance = 0
+    elseif v:IsA("Decal") or v:IsA("Texture") and decalsyeeted then
+        v.Transparency = 1
+    elseif v:IsA("ParticleEmitter") or v:IsA("Trail") then
+        v.Lifetime = NumberRange.new(0)
+    elseif v:IsA("Explosion") then
+        v.BlastPressure = 1
+        v.BlastRadius = 1
+    elseif v:IsA("Fire") or v:IsA("SpotLight") or v:IsA("Smoke") then
+        v.Enabled = false
+    elseif v:IsA("MeshPart") then
+        v.Material = "Plastic"
+        v.Reflectance = 0
+        v.TextureID = 10385902758728957
+    end
+end
+for i, e in pairs(l:GetChildren()) do
+    if e:IsA("BlurEffect") or e:IsA("SunRaysEffect") or e:IsA("ColorCorrectionEffect") or e:IsA("BloomEffect") or e:IsA("DepthOfFieldEffect") then
+        e.Enabled = false
+    end
+end
+
+    end,
+})
+
+
+
+
+
+
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+
+local moveDistance = 5
+local isEnabled = false
+
+
+local function moveCharacter()
+    local newPosition = character.PrimaryPart.Position + character.PrimaryPart.CFrame.lookVector * moveDistance
+    character:SetPrimaryPartCFrame(CFrame.new(newPosition))
+end
+
+
+local function toggleCallback(value)
+    isEnabled = value
+end
+
+
+local function onKeyPress(input)
+    if isEnabled and input.KeyCode == Enum.KeyCode.F then
+        moveCharacter()
+    end
+end
+
+local UserInputService = game:GetService("UserInputService")
+UserInputService.InputBegan:Connect(onKeyPress)
+
+
+local Toggle = Tab5:CreateToggle({
+    Name = "F to Quick tp good for plays",
+    CurrentValue = false,
+    Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+    Callback = toggleCallback
+})
+
+
+
+local autokick = false
+
+task.spawn(function()
+    getgenv().Variables = {}
+
+    Variables.Players = game:GetService("Players")
+    Variables.ReplicatedStorage = game:GetService("ReplicatedStorage")
+    Variables.UserInputService = game:GetService("UserInputService")
+    Variables.Client = Variables.Players.LocalPlayer
+    Variables.Character = Variables.Client.Character or Variables.Client.CharacterAdded:Wait()
+
+    Variables.Client.CharacterAdded:Connect(function(Character)
+        Variables.Character = Character
+    end)
+
+    local Aimbot = {}
+
+    function Aimbot:GetAccuracyArrow(Arrows)
+        local Y = 0
+        local Arrow1 = nil
+
+        for _, Arrow in pairs(Arrows) do
+            if Arrow.Position.Y.Scale > Y then
+                Y = Arrow.Position.Y.Scale
+                Arrow1 = Arrow
+            end
+        end
+
+        return Arrow1
+    end
+
+    Variables.Client.PlayerGui.ChildAdded:Connect(function(child)
+        if child.Name == "KickerGui" and autokick == true then
+            local KickerGui = child
+            local Meter = KickerGui:FindFirstChild("Meter")
+            local Cursor = Meter:FindFirstChild("Cursor")
+            local Arrows = {}
+
+            for i, v in pairs(Meter:GetChildren()) do
+                if string.find(v.Name:lower(), "arrow") then
+                    table.insert(Arrows, v)
+                end
+            end
+
+            repeat
+                task.wait()
+            until Cursor.Position.Y.Scale < 0.02
+            mouse1click()
+            repeat
+                task.wait()
+            until Cursor.Position.Y.Scale >= Aimbot:GetAccuracyArrow(Arrows).Position.Y.Scale + (.03 / (100 / 100))
+            mouse1click()
+        end
+    end)
+end)
+
+local Toggle = Tab3:CreateToggle({
+    Name = "kick aimbot with accuracy",
+    CurrentValue = false,
+    Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+    Callback = function(state)
+        autokick = state
+    end
+})
+
+local Slider = Tab3:CreateSlider({
+	Name = "accuracy",
+	Range = {0, 5},
+	Increment = 1,
+	Suffix = "kicker accuracy",
+	CurrentValue = 0,
+	Flag = "Slider1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+	Callback = function(value)
+        PerfectKick = v
+    end
+})
+
+
+
+	local block = false
+local blockslider = 1.5
+local defaultSize = Vector3.new(0.75, 5, 1.5)
+
+local function setBlockSize()
+    if game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("BlockPart") then
+        game.Players.LocalPlayer.Character.BlockPart.Size = Vector3.new(blockslider, 5, blockslider)
+    end
+end
+
+local Toggle = Tab5:CreateToggle({
+    Name = "Block reach",
+    CurrentValue = false,
+    Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+    Callback = function(state)
+        block = state
+        if block then
+            setBlockSize()
+        else
+            game.Players.LocalPlayer.Character.BlockPart.Size = defaultSize
+            blockslider = 1.5
+        end
+    end,
+})
+
+local Slider = Tab5:CreateSlider({
+	Name = "block size",
+	Range = {1.5, 20},
+	Increment = 0.5,
+	Suffix = "block",
+	CurrentValue = 0,
+	Flag = "Slider1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+	Callback = function(set)
+        blockslider = set
+        if block then
+            setBlockSize()
+        end
+    end,
+})
+
+--qb
 
 
