@@ -113,21 +113,21 @@ local Window = Rayfield:CreateWindow({
 		Key = "ABCDEF"
 	}
 })
-local Tab = Window:CreateTab("qb stuff")
-local Tab1 = Window:CreateTab("Mag stuff")
+local Tab = Window:CreateTab("QB")
+local Tab1 = Window:CreateTab("Catching")
 local Tab2 = Window:CreateTab("Movement")
-local Tab3 = Window:CreateTab("Kicker aimbot")
-local Tab4 = Window:CreateTab("DE stuff")
-local Tab5 = Window:CreateTab("Offence stuff")
-local Section = Tab:CreateSection("qb")
+local Tab3 = Window:CreateTab("KickerAimbot")
+local Tab4 = Window:CreateTab("Defense")
+local Tab5 = Window:CreateTab("Offense")
+local Section = Tab:CreateSection("QB")
 local Section = Tab1:CreateSection("Mag")
 local Section = Tab2:CreateSection("Movement")
 local Section = Tab3:CreateSection("Kicking")
-local Section = Tab4:CreateSection("DEFENCE")
-local Section = Tab5:CreateSection("OFFENCE")
-local Label = Tab:CreateLabel("ALL OF QB STUFF IS IN BETA I WOULDNT USE FOR RN")
+local Section = Tab4:CreateSection("Defense")
+local Section = Tab5:CreateSection("Offense")
+local Label = Tab:CreateLabel("QB is in beta be carefull!")
 local Button = Tab:CreateButton({
-	Name = "do this for qb gui to go away",
+	Name = "Cick this for QB gui to go away!",
 	Callback = function()
         enabled = false
 		-- The function that takes place when the button is pressed
@@ -137,7 +137,7 @@ local Button = Tab:CreateButton({
 
 --slider
 local Toggle = Tab:CreateToggle({
-	Name = "qb aimbot look at top right for the gui",
+	Name = "QB aimbot",
 	CurrentValue = false,
 	Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
 	Callback = function(state)
@@ -259,7 +259,7 @@ local Toggle = Tab:CreateToggle({
             PlayerLabel.Position = UDim2.new(0, 0, 0.660000026, 0)
             PlayerLabel.Size = UDim2.new(0, 100, 0, 34)
             PlayerLabel.Font = Enum.Font.Gotham
-            PlayerLabel.Text = "Player press q to lock"
+            PlayerLabel.Text = "Q to lock!"
             PlayerLabel.TextColor3 = Color3.new(0.396078, 1, 0.588235)
             PlayerLabel.TextSize = 22
             
@@ -289,7 +289,7 @@ local Toggle = Tab:CreateToggle({
             ModeText.BorderSizePixel = 0
             ModeText.Size = UDim2.new(0, 100, 0, 72)
             ModeText.Font = Enum.Font.Gotham
-            ModeText.Text = "mag press z to change"
+            ModeText.Text = "X to chnge"
             ModeText.TextColor3 = Color3.new(0.8, 0.6, 1)
             ModeText.TextScaled = true
             ModeText.TextSize = 1
@@ -591,7 +591,7 @@ local Toggle = Tab:CreateToggle({
     
     
     local Toggle = Tab:CreateToggle({
-        Name = "angle qb",
+        Name = "Angle QB",
         CurrentValue = false,
         Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
         Callback = function(state)
@@ -709,7 +709,7 @@ local rs = game:GetService("RunService")
 
 
 local Toggle = Tab1:CreateToggle({
-	Name = "uni mags",
+	Name = "Mags",
 	CurrentValue = false,
 	Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
 	Callback = function(v)
@@ -721,7 +721,7 @@ local Toggle = Tab1:CreateToggle({
 end})
 
 local Slider = Tab1:CreateSlider({
-	Name = "Universal Delay",
+	Name = "Mag Delay",
 	Range = {0, 1},
 	Increment = 0.1,
 	Suffix = "mag delay",
@@ -732,7 +732,7 @@ local Slider = Tab1:CreateSlider({
 end})
 
 local Slider = Tab1:CreateSlider({
-	Name = "Universal Range",
+	Name = "Mag Range",
 	Range = {0, 60},
 	Increment = 1,
 	Suffix = "mag range",
@@ -745,7 +745,7 @@ end})
 
 
 local Toggle = Tab1:CreateToggle({
-    Name = "emulator mags",
+    Name = "Emulator mags",
     CurrentValue = false,
     Callback = function(v)
         regtog = v
@@ -1351,7 +1351,7 @@ end
 
 --FindTarget
 local Toggle = Tab:CreateToggle({
-    Name = "football landing predictions",
+    Name = "Football Landing Predictions",
     CurrentValue = false,
     Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
     Callback = function(v)
@@ -1412,7 +1412,7 @@ end})
 
 local qbaimpred = false
 local Toggle = Tab:CreateToggle({
-    Name = "qb aim pred THIS WAS HARD ASF",
+    Name = "QB Aim Predictions",
     CurrentValue = false,
     Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
     Callback = function(v)
@@ -1758,7 +1758,7 @@ local Slider = Tab2:CreateSlider({
 
 
 local Toggle = Tab:CreateToggle({
-    Name = "auto qb",
+    Name = "Auto QB",
     CurrentValue = false,
     Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
     Callback = function(data)
