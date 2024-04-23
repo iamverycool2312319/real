@@ -98,12 +98,12 @@ print('Done! Now Loading')
 
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 local Window = Rayfield:CreateWindow({
-	Name = "SaturnHub PC (BETA)",
-	LoadingTitle = "SaturnHub PC",
-	LoadingSubtitle = "by SaturnHub Devs",
+	Name = "boolian hub",
+	LoadingTitle = "1of1hammy",
+	LoadingSubtitle = "by 1of1hammy",
 	ConfigurationSaving = {
 		Enabled = true,
-		FileName = "Big Hub"
+		FileName = "boolian"
 	},
 	KeySystem = false, -- Set this to true to use our key system
 	KeySettings = {
@@ -113,19 +113,19 @@ local Window = Rayfield:CreateWindow({
 		Key = "ABCDEF"
 	}
 })
-local Tab = Window:CreateTab("QB Stuff")
-local Tab1 = Window:CreateTab("Catching")
+local Tab = Window:CreateTab("qb stuff")
+local Tab1 = Window:CreateTab("Mag stuff")
 local Tab2 = Window:CreateTab("Movement")
-local Tab3 = Window:CreateTab("Kicker Aimbot")
-local Tab4 = Window:CreateTab("Defense stuff")
-local Tab5 = Window:CreateTab("Offense stuff")
-local Section = Tab:CreateSection("QB")
+local Tab3 = Window:CreateTab("Kicker aimbot")
+local Tab4 = Window:CreateTab("DE stuff")
+local Tab5 = Window:CreateTab("Offence stuff")
+local Section = Tab:CreateSection("qb")
 local Section = Tab1:CreateSection("Mag")
 local Section = Tab2:CreateSection("Movement")
 local Section = Tab3:CreateSection("Kicking")
-local Section = Tab4:CreateSection("Defense")
-local Section = Tab5:CreateSection("Offense")
-local Label = Tab:CreateLabel("QB stuff in beta be careful!")
+local Section = Tab4:CreateSection("DEFENCE")
+local Section = Tab5:CreateSection("OFFENCE")
+local Label = Tab:CreateLabel("ALL OF QB STUFF IS IN BETA I WOULDNT USE FOR RN")
 local Button = Tab:CreateButton({
 	Name = "do this for qb gui to go away",
 	Callback = function()
@@ -2009,7 +2009,6 @@ local Slider = Tab5:CreateSlider({
     end,
 })
 
---tackle
 
 
 --runser
